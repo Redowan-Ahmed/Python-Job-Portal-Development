@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import CandidateApplication, JobPost
 
-# Register your models here.
+
+admin.site.register(JobPost)
+admin.site.register(CandidateApplication)

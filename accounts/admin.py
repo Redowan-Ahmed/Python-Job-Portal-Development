@@ -13,8 +13,8 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     model = User
     fieldsets = (
-        (None, {'fields': ('first_name', 'last_name', 'email', 'username', 'password')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'email_verified', 'otp', 'email_token', 'is_hr', 'is_candidate')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'email','phone_number' ,'profile_picture', 'password')}),
+        ('Permissions and Security', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions', 'email_verified', 'otp', 'email_token', 'is_hr', 'is_candidate')}),
         ('Important dates', {'fields': ('date_joined', 'last_login')})
     )
     list_display = ('email','phone_number', 'is_active',
@@ -24,9 +24,10 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': (
-            'first_name', 'last_name', 'username', 'email', 'phone_number', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser', 'is_hr', 'is_candidate')}
+            'first_name', 'last_name', 'email', 'phone_number', 'password1', 'password2', 'is_staff', 'is_active', 'is_superuser', 'is_hr', 'is_candidate')}
          ),
     )
+    ordering = []
 
 
 admin.site.register(User, CustomUserAdmin)

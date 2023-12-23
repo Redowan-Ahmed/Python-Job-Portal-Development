@@ -22,6 +22,7 @@ class User(AbstractUser):
     otp = models.CharField(max_length=10, null=True, blank=True)
     is_hr = models.BooleanField(default=False)
     is_candidate = models.BooleanField(default=True)
+    username = None
 
     objects = CustomUserManager()
 
@@ -57,6 +58,11 @@ class HrProfile(BaseModel):
     biography = models.TextField(blank=True, max_length=1000)
     full_name = models.CharField(max_length=200, blank=True)
     position = models.CharField(max_length=200, blank=True)
+    address = models.CharField(max_length=200, blank=True)
+    city = models.CharField(max_length=200, blank=True)
+    state = models.CharField(max_length=200, blank=True)
+    country = models.CharField(max_length=200, blank=True)
+    postal_code = models.CharField(max_length=200, blank=True)
 
     def __str__(self):
         return self.user.email

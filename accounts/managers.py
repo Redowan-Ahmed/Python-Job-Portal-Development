@@ -10,11 +10,13 @@ class CustomUserManager(BaseUserManager):
 
         email = self.normalize_email(email)
         email = email.lower()
-
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
+        try:
+            user = self.model(email=email, **extra_fields)
+            user.set_password(password)
+            user.save()
+            return user
+        except Exception as e:
+            print('Exception in creating a User', str(e))
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault("is_staff", True)

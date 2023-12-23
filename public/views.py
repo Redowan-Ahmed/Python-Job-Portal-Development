@@ -1,3 +1,4 @@
+from multiprocessing import context
 from django.shortcuts import render
 from .models import SupportContact
 from django.contrib import messages
@@ -43,5 +44,17 @@ def Contact(request):
                 request, "Thank your for your Submission, We'll rechout with you soon")
             return render(request, 'contact.html', context=context)
         return render(request, 'contact.html', context=context)
+    else:
+        return render(request, 'contact.html')
 
-    return render(request, 'contact.html')
+
+def Jobs(request):
+    return render(request, 'job-grid.html')
+
+
+def JobDetails(request, pk):
+    context = {
+        'pk':pk
+    }
+    print(pk)
+    return render(request, 'job-details.html', context)
