@@ -1,13 +1,10 @@
-<!-- Navbar Area Start -->
 <div class="navbar-area">
-    <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
       <a href="{% url 'home' %}" class="logo">
 
         <img src="/static/assets/img/logo.png" alt="logo" />
       </a>
     </div>
-    <!-- Menu For Desktop Device -->
     <div class="main-nav">
       <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -139,9 +136,8 @@
                 <a href="{% url 'contact' %}" class="nav-link {% if request.META.PATH_INFO == '/contact-us/' %} active {% endif %}">Contact Us</a>
               </li>
             </ul>
-  
+
             <div class="other-option">
-               
               <a href=" {% url 'signUp' %}" class="signup-btn">Sign Up</a>
               <a href=" {% url 'signIn' %}" class="signin-btn">Sign In</a>
             </div>
@@ -150,5 +146,3 @@
       </div>
     </div>
   </div>
-  <!-- Navbar Area End -->
-  
