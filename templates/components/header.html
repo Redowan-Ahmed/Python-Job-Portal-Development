@@ -2,16 +2,16 @@
 <div class="navbar-area">
     <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
-      <a href="index.html" class="logo">
+      <a href="{% url 'home' %}" class="logo">
+
         <img src="/static/assets/img/logo.png" alt="logo" />
       </a>
     </div>
-  
     <!-- Menu For Desktop Device -->
     <div class="main-nav">
       <div class="container">
         <nav class="navbar navbar-expand-lg navbar-light">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{% url 'home' %}">
             <img src="/static/assets/img/logo.png" alt="logo" />
           </a>
           <div
@@ -20,31 +20,13 @@
           >
             <ul class="navbar-nav m-auto">
               <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle active">Home</a>
-                <ul class="dropdown-menu">
-                  <li class="nav-item">
-                    <a href="index.html" class="nav-link active">Home One</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="index-two.html" class="nav-link">Home Two</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="index-three.html" class="nav-link">Home Three</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="index-four.html" class="nav-link">Home Four</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="index-five.html" class="nav-link">Home Five</a>
-                  </li>
-                </ul>
+                <a href="{% url 'home' %}" class="nav-link {% if request.META.PATH_INFO == '/' %} active {% endif %}">Home</a>
               </li>
               <li class="nav-item">
-                <a href="about.html" class="nav-link">About</a>
+                <a href="{% url 'about' %}" class="nav-link {% if request.META.PATH_INFO == '/about-us/' %} active {% endif %}">About</a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link dropdown-toggle">Jobs</a>
-  
                 <ul class="dropdown-menu">
                   <li class="nav-item">
                     <a href="find-job.html" class="nav-link">Find A Job</a>
@@ -154,7 +136,7 @@
                 </ul>
               </li>
               <li class="nav-item">
-                <a href="contact.html" class="nav-link">Contact Us</a>
+                <a href="{% url 'contact' %}" class="nav-link {% if request.META.PATH_INFO == '/contact-us/' %} active {% endif %}">Contact Us</a>
               </li>
             </ul>
   
