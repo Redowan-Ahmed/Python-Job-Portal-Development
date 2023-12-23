@@ -136,11 +136,17 @@
                 <a href="{% url 'contact' %}" class="nav-link {% if request.META.PATH_INFO == '/contact-us/' %} active {% endif %}">Contact Us</a>
               </li>
             </ul>
-
+            {% if request.user.is_authenticated %}
+            <div class="other-option">
+              <a href=" {% url 'logout' %}" class="signup-btn">Logout</a>
+              <a href=" {% url 'account' %}" class="signin-btn">Account</a>
+            </div>
+            {% else %}
             <div class="other-option">
               <a href=" {% url 'signUp' %}" class="signup-btn">Sign Up</a>
               <a href=" {% url 'signIn' %}" class="signin-btn">Sign In</a>
             </div>
+            {% endif %}
           </div>
         </nav>
       </div>

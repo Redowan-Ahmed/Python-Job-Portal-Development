@@ -1,8 +1,11 @@
-from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from .models import SupportContact
 from django.contrib import messages
 from .forms import SupportContactForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate , login, logout
+from accounts.models import User
+# from django.shortcuts import get_object_or_404
 
 
 def index(request):
@@ -14,10 +17,37 @@ def SignUp(request):
 
 
 def SignIn(request):
-    return render(request, 'sign-in.html')
+    if request.user.is_authenticated:
+        return redirect('account')
+    else:
+        if request.method == 'POST':
+            email = request.POST['email']
+            password = request.POST['password']
+            check_user_exist = User.objects.filter(email = email).exists()
+            if check_user_exist:
+                user = authenticate(request= request, email = email, password = password)
+                if user:
+                    login(request = request, user= user)
+                    messages.info(request, "You are now logged in")
+                    return redirect('account')
+                else:
+                    messages.error(request, "Invalid Email or Password")
+            else:
+                messages.error(request,'Account does not exist! Please sign up first.')
+        return render(request, 'sign-in.html')
 
+def SignOut(request):
+    if request.user.is_authenticated:
+        logout(request)
+        messages.info(request, message="you're logged out")
+        return redirect('signIn')
+    else:
+        messages.warning(request, message="Please login")
+        return redirect('signIn')
 
+@login_required
 def Account(request):
+    print(request.user.hr_profile)
     return render(request, 'account.html')
 
 

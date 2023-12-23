@@ -34,22 +34,30 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-8 offset-md-2 offset-lg-3">
-                        <form class="signin-form">
+                        <form class="signin-form" method="post">
+                            {% if messages %}
+                                <ul class="messages text-danger text-center text-decoration-none">
+                                    {% for message in messages %}
+                                    <li class="text-decoration-none" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            {% csrf_token %}
                             <div class="form-group">
                               <label>Enter Email</label>
-                              <input type="email" class="form-control" placeholder="Enter Your Email" required>
+                              <input type="email" name="email" class="form-control" placeholder="Enter Your Email" required>
                             </div>
 
                             <div class="form-group">
                                 <label>Enter Password</label>
-                                <input type="password" class="form-control" placeholder="Enter Your Password" required>
+                                <input type="password" name="password" class="form-control" placeholder="Enter Your Password" required>
                             </div>
 
                             <div class="signin-btn text-center">
                                 <button type="submit">Sign In</button>
                             </div>
 
-                            <div class="other-signin text-center">
+                            <!-- <div class="other-signin text-center">
                                 <span>Or sign in with</span>
                                 <ul>
                                     <li>
@@ -73,7 +81,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> -->
 
                             <div class="create-btn text-center">
                                 <p>Not have an account?

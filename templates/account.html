@@ -1,32 +1,12 @@
 {% extends './components/Base.html' %}
 
 {% block meta %}
-	<title>Sign in</title>
+	<title>Account</title>
 {% endblock meta %}
 
 {% block content %}
 
 {% include './components/header.html' %}
-        <!-- Page Title Start -->
-        <section class="page-title title-bg10">
-            <div class="d-table">
-                <div class="d-table-cell">
-                    <h2>Account</h2>
-                    <ul>
-                        <li>
-                            <a href="index.html">Home</a>
-                        </li>
-                        <li>Account</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="lines">
-                <div class="line"></div>
-                <div class="line"></div>
-                <div class="line"></div>
-            </div>
-        </section>
-        <!-- Page Title End -->
 
         <!-- Account Area Start -->
         <section class="account-section ptb-100">
@@ -35,8 +15,14 @@
                     <div class="col-md-4">
                         <div class="account-information">
                             <div class="profile-thumb">
-                                <img src="assets/img/account.jpg" alt="account holder image">
-                                <h3>John Smith</h3>
+                                <img src="{{request.user.profile_picture.url}}" alt="account holder image">
+                                
+                                {% if request.user.get_full_name %}
+                                    <h3>{{ request.user.get_full_name }}</h3>
+                                
+                                {% else %}
+                                    <h3>{{ request.user.email }}</h3>
+                                {% endif %}
                                 <p>Web Developer</p>
                             </div>
 
