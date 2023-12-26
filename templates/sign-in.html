@@ -1,18 +1,17 @@
-{% extends './components/Base.html' %}
-
-{% block meta %}
-	<title>Sign in</title>
-{% endblock meta %}
+{% extends "./components/Base.html" %}
+{% load i18n %}
+{% load allauth account socialaccount %}
 
 {% block content %}
-
 {% include './components/header.html' %}
 
         <!-- Page Title Start -->
         <section class="page-title title-bg12">
             <div class="d-table">
                 <div class="d-table-cell">
-                    <h2>Sign In</h2>
+                    {% element h2 %}
+                    {% trans "Sign In" %}
+                    {% endelement %}
                     <ul>
                         <li>
                             <a href="index.html">Home</a>
@@ -28,30 +27,49 @@
             </div>
         </section>
         <!-- Page Title End -->
-
         <!-- Sign In Section Start -->
         <div class="signin-section ptb-100">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-8 offset-md-2 offset-lg-3">
                         <form class="signin-form" method="post">
-                            {% if messages %}
-                                <ul class="messages text-danger text-center text-decoration-none">
-                                    {% for message in messages %}
-                                    <li class="text-decoration-none" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
                             {% csrf_token %}
+                            {% for error in form.errors %}
+                                {{error}}
+                            {% endfor %}
                             <div class="form-group">
-                              <label>Enter Email</label>
-                              <input type="email" name="email" class="form-control" placeholder="Enter Your Email" required>
+                              <label for="{{form.login.id_for_label }}" >Enter Email</label>
+                              <input type="email" name="{{form.login.html_name}}" class="form-control" placeholder="Enter Your Email" autocomplete="email" required id="{{form.login.id_for_label }}">
+                              {% if form.errors %}
+                                <div class="errorlist text-danger">
+                                    {% for error in form.errors.login %}
+                                        <p class="text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
                             </div>
 
                             <div class="form-group">
-                                <label>Enter Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="Enter Your Password" required>
+                                <label for="{{form.password.id_for_label }}">Enter Password</label>
+                                <input type="password" name="{{form.password.html_name}}" class="form-control" autocomplete="current-password" placeholder="Enter Your Password" aria-describedby="id_password_helptext" required id="{{ form.password.id_for_label }}">
+                                {% if form.errors %}
+                                <div class="errorlist text-danger">
+                                    {% for error in form.errors.password %}
+                                        <p class="text-danger">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                <span class="helptext" id="id_password_helptext"><a href="/">Forgot your password?</a></span>
                             </div>
+                            <div class="form-group">
+                                <label for="id_remember">Remember Me:</label>
+                                <input type="checkbox" name="remember" id="id_remember">
+                            </div>
+                            {% if redirect_field_value %}
+                                <input type="hidden"
+                                    name="{{ redirect_field_name }}"
+                                    value="{{ redirect_field_value }}" />
+                            {% endif %}
 
                             <div class="signin-btn text-center">
                                 <button type="submit">Sign In</button>
@@ -108,15 +126,12 @@
                             <p>Subscribe & get all related jobs notification</p>
                         </div>
                     </div>
-
                     <div class="col-md-6">
                         <form class="newsletter-form" data-toggle="validator">
                             <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
-    
                             <button class="default-btn sub-btn" type="submit">
                                 Subscribe
                             </button>
-    
                             <div id="validator-newsletter" class="form-result"></div>
                         </form>
                     </div>
@@ -124,5 +139,6 @@
             </div>
         </section>
         <!-- Subscribe Section End -->
-        {% include './components/footer.html' %}
-        {% endblock content %}
+
+    {% include './components/footer.html' %}
+{% endblock content %}

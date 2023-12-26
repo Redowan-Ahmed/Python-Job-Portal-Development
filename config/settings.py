@@ -37,12 +37,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #Third Party App
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 
     # Inner Apps
     'accounts',
     'candidates',
     'hr',
     'public',
+
 ]
 
 MIDDLEWARE = [
@@ -53,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -74,6 +82,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                # `allauth` needs this from django
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -119,6 +129,56 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': '123',
+            'secret': '456',
+            'key': '1'
+        }
+    }
+}
+
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_FORMS = {
+    'add_email': 'allauth.account.forms.AddEmailForm',
+    'change_password': 'allauth.account.forms.ChangePasswordForm',
+    'login': 'allauth.account.forms.LoginForm',
+    'reset_password': 'allauth.account.forms.ResetPasswordForm',
+    'reset_password_from_key': 'allauth.account.forms.ResetPasswordKeyForm',
+    'set_password': 'allauth.account.forms.SetPasswordForm',
+    'signup': 'accounts.forms.CustomSignupForm',
+    'user_token': 'allauth.account.forms.UserTokenForm',
+}
+
+ACCOUNT_RATE_LIMITS = {
+    # Change password view (for users already logged in)
+    "change_password": "5/m",
+    # Email management (e.g. add, remove, change primary)
+    "manage_email": "10/m",
+    # Request a password reset, global rate limit per IP
+    "reset_password": "20/m",
+    # Rate limit measured per individual email address
+    "reset_password_email": "5/m",
+    # Password reset (the view the password reset email links to).
+    "reset_password_from_key": "20/m",
+    # Signups.
+    "signup": "20/m",
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

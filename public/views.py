@@ -47,7 +47,7 @@ def SignOut(request):
 
 @login_required
 def Account(request):
-    print(request.user.hr_profile)
+    #print(request.user.hr_profile)
     return render(request, 'account.html')
 
 

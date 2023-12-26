@@ -1,13 +1,15 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, re_path
-from public.views import index, SignIn, SignUp , Account, AboutUs, Contact, Jobs, JobDetails, SignOut
+from django.urls import include, path, re_path
+from public.views import index, SignUp , Account, AboutUs, Contact, Jobs, JobDetails, SignOut
+from accounts.views import CustomLogin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('all/accounts/', include('allauth.urls')),
     path('', index , name='home'),
-    path('sign-in/', SignIn , name='signIn'),
+    path('sign-in/', CustomLogin.as_view(), name='signIn'),
     path('sign-up/', SignUp , name='signUp'),
     path('logout/', SignOut , name='logout'),
     path('account/', Account , name='account'),
