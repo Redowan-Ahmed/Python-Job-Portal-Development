@@ -22,14 +22,15 @@ class CustomSignupForm(SignupForm):
     first_name = forms.CharField(max_length=100, required=True, label='Enter First Name')
     last_name = forms.CharField(max_length=100, required=True, label='Enter Last Name')
     phoneNumberRegex = RegexValidator(
-        regex=r"^\+?1?\d{8,15}$", message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+        regex=r"^\+?1?\d{8,15}$", message="Phone number must be entered in the format: '+999999999'.")
     phone_number = forms.CharField(
         validators=[phoneNumberRegex], max_length=16, required=True, label='Enter Phone Number'
     )
 
     def save(self, request):
         user = super(CustomSignupForm, self).save(request)
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        user.phone_number = self.cleaned_data['phone_number']
+        user.first_name = self.cleaned_data.get('first_name')
+        user.last_name = self.cleaned_data.get('last_name')
+        user.phone_number = self.cleaned_data.get('phone_number')
+        user.save()
         return user
