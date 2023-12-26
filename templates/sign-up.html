@@ -36,6 +36,13 @@
                     <div class="col-lg-6 col-md-8 offset-md-2 offset-lg-3">
                         <form class="signup-form" method="post">
                             {% csrf_token %}
+                            {% if form.non_field_errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="alert alert-error text-danger text-center">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                             <div class="row">
                             <div class="col-md-6">
                                     <div class="form-group">
@@ -79,33 +86,33 @@
                                 <label>Enter Phone Number</label>
                                 <input type="tel" class="form-control" name="phone_number" autocomplete="tel-country-code" placeholder="+115646556115" maxlength="16" required>
                                 {% if form.errors.phone_number %}
-                                            <div class="errorlist text-danger">
+                                            <ul class="errorlist text-danger">
                                                 {% for error in form.errors.phone_number %}
-                                                    <p class="text-danger">{{ error }}</p>
+                                                    <li class="text-danger">{{ error }}</li>
                                                 {% endfor %}
-                                            </div>
+                                            </ul>
                                         {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Enter Password</label>
                                 <input type="password" name="password1" class="form-control" placeholder="Enter Your Password" required>
                                 {% if form.errors.password1 %}
-                                            <div class="errorlist text-danger">
+                                            <ul class="errorlist text-danger">
                                                 {% for error in form.errors.password1 %}
-                                                    <p class="text-danger">{{ error }}</p>
+                                                    <li class="text-danger">{{ error }}</li>
                                                 {% endfor %}
-                                            </div>
+                                            </ul>
                                         {% endif %}
                             </div>
                             <div class="form-group">
                                 <label>Enter Confirm Password</label>
                                 <input type="password" name="password2" class="form-control" placeholder="Enter Your Password (again)" required>
                                 {% if form.errors.password2 %}
-                                            <div class="errorlist text-danger">
+                                            <ul class="errorlist text-danger">
                                                 {% for error in form.errors.password2 %}
-                                                    <p class="text-danger">{{ error }}</p>
+                                                    <li class="text-danger">{{ error }}</li>
                                                 {% endfor %}
-                                            </div>
+                                            </ul>
                                         {% endif %}
                             </div>
 
@@ -141,8 +148,8 @@
 
                             <div class="create-btn text-center">
                                 <p>
-                                    Have an Account?
-                                    <a href="signin.html">
+                                    Have an Account already?
+                                    <a href="{% url 'signIn' %}">
                                         Sign In
                                         <i class='bx bx-chevrons-right bx-fade-right'></i>
                                     </a>

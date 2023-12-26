@@ -34,18 +34,22 @@
                     <div class="col-lg-6 col-md-8 offset-md-2 offset-lg-3">
                         <form class="signin-form" method="post">
                             {% csrf_token %}
-                            {% for error in form.errors %}
-                                {{error}}
-                            {% endfor %}
+                            {% if form.errors %}
+                                {% for error in form.non_field_errors %}
+                                    <div class="alert alert-error text-danger text-center">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
                             <div class="form-group">
                               <label for="{{form.login.id_for_label }}" >Enter Email</label>
                               <input type="email" name="{{form.login.html_name}}" class="form-control" placeholder="Enter Your Email" autocomplete="email" required id="{{form.login.id_for_label }}">
                               {% if form.errors %}
-                                <div class="errorlist text-danger">
+                                <ul class="errorlist text-danger">
                                     {% for error in form.errors.login %}
-                                        <p class="text-danger">{{ error }}</p>
+                                        <li class="text-danger">{{ error }}</li>
                                     {% endfor %}
-                                </div>
+                                </ul>
                             {% endif %}
                             </div>
 
@@ -53,11 +57,11 @@
                                 <label for="{{form.password.id_for_label }}">Enter Password</label>
                                 <input type="password" name="{{form.password.html_name}}" class="form-control" autocomplete="current-password" placeholder="Enter Your Password" aria-describedby="id_password_helptext" required id="{{ form.password.id_for_label }}">
                                 {% if form.errors %}
-                                <div class="errorlist text-danger">
+                                <ul class="errorlist text-danger">
                                     {% for error in form.errors.password %}
-                                        <p class="text-danger">{{ error }}</p>
+                                        <li class="text-danger">{{ error }}</li>
                                     {% endfor %}
-                                </div>
+                                </ul>
                                 {% endif %}
                                 <span class="helptext" id="id_password_helptext"><a href="/">Forgot your password?</a></span>
                             </div>
