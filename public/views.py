@@ -1,4 +1,5 @@
 from unicodedata import category
+from django.http import Http404
 from django.shortcuts import redirect, render
 from .models import SupportContact
 from django.contrib import messages
@@ -6,14 +7,20 @@ from .forms import SupportContactForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate , login, logout
 from accounts.models import User
-from hr.models import JobCategory
-# from django.shortcuts import get_object_or_404
+from hr.models import JobCategory, JobPost
+from datetime import date
+from django.shortcuts import get_object_or_404
 
+
+currentDate = date.today()
 
 def index(request):
-    category = JobCategory.objects.filter(featured = True)[:8]
+    categories = JobCategory.objects.filter(featured = True)[:8]
+    jobs = JobPost.objects.filter(last_date_of_apply__gte = currentDate)[:6]
     context = {
-        'categories': category
+        'categories': categories,
+        'today': currentDate,
+        'jobs': jobs
     }
     return render(request, 'index.html', context= context)
 
@@ -89,8 +96,17 @@ def Jobs(request):
 
 
 def JobDetails(request, pk):
-    context = {
-        'pk':pk
-    }
-    print(pk)
-    return render(request, 'job-details.html', context)
+    try:
+        job = get_object_or_404(JobPost, pk=pk)
+        related_jobs = JobPost.objects.filter(job_category__name = job.job_category.name, last_date_of_apply__gte = currentDate).exclude(pk=job.pk)[:5]
+        job_keyword = job.keywords.split(',')
+        context = {
+            'pk':pk,
+            'job': job,
+            'related_jobs': related_jobs,
+            'keywords':job_keyword
+        }
+        return render(request, 'job-details.html', context)
+    except Exception as e:
+        print(e)
+        raise Http404("Page not found")

@@ -1,5 +1,3 @@
-
-from email.policy import default
 from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings
@@ -7,7 +5,7 @@ from base.model import BaseModel
 
 
 class JobCategory(BaseModel):
-    name = models.CharField(max_length=100, db_index = True)
+    name = models.CharField(max_length=100, db_index = True, unique= True)
     icon = models.ImageField(upload_to='category-img')
     featured = models.BooleanField(default=False)
     slug = models.SlugField(max_length=200, blank=True)

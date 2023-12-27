@@ -479,13 +479,15 @@ h3 {
     .thumb-img {
         border: 1px dashed #d9dbdf;
         max-width: 100%;
+        object-fit: cover;
         height: 100%;
         text-align: center;
         line-height: 80px;
         background: $white-color;
 
         img {
-            max-width: 40px;
+            max-width: 100%;
+            object-fit: cover;
         }
     }
 
