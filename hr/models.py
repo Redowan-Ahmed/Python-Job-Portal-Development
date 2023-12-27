@@ -7,7 +7,9 @@ from base.model import BaseModel
 
 
 class JobCategory(BaseModel):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, db_index = True)
+    icon = models.ImageField(upload_to='category-img')
+    featured = models.BooleanField(default=False)
     slug = models.SlugField(max_length=200, blank=True)
 
     def __str__(self):

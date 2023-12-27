@@ -152,7 +152,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
-ACCOUNT_EMAIL_VERIFICATION = ''
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 2
 ACCOUNT_FORMS = {
     'add_email': 'allauth.account.forms.AddEmailForm',
@@ -222,3 +222,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = 'smtp.titan.email'
+EMAIL_USE_TLS = False
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'no-reply@mercegrower.com'
+EMAIL_HOST_PASSWORD = 'Redowan@42311'
+DEFAULT_FROM_EMAIL = 'no-reply@mercegrower.com'
+SERVER_EMAIL = 'no-reply@mercegrower.com'

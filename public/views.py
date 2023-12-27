@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.shortcuts import redirect, render
 from .models import SupportContact
 from django.contrib import messages
@@ -5,11 +6,16 @@ from .forms import SupportContactForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate , login, logout
 from accounts.models import User
+from hr.models import JobCategory
 # from django.shortcuts import get_object_or_404
 
 
 def index(request):
-    return render(request, 'index.html')
+    category = JobCategory.objects.filter(featured = True)[:8]
+    context = {
+        'categories': category
+    }
+    return render(request, 'index.html', context= context)
 
 
 def SignUp(request):

@@ -86,85 +86,28 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-accounting"></i>
-            <h3>Accountancy</h3>
-            <p>301 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-graduation-cap"></i>
-            <h3>Education</h3>
-            <p>210 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-wrench-and-screwdriver-in-cross"></i>
-            <h3>Automotive Jobs</h3>
-            <p>281 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-consultation"></i>
-            <h3>Business</h3>
-            <p>122 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-heart"></i>
-            <h3>Health Care</h3>
-            <p>335 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-computer"></i>
-            <h3>IT & Agency</h3>
-            <p>401 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6 offset-md-2 offset-lg-0">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-worker"></i>
-            <h3>Engineering</h3>
-            <p>100 open position</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-lg-3 col-md-4 col-sm-6">
-        <a href="job-list.html">
-          <div class="category-card">
-            <i class="flaticon-auction"></i>
-            <h3>Legal</h3>
-            <p>201 open position</p>
-          </div>
-        </a>
-      </div>
+      
+      {% if categories %}
+        {% for category in categories %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+              <a href="job-list.html">
+                <div class="category-card">
+                  <i>
+                  <img src="{{category.icon.url}}" width="80px" height="80px" class="object-fit" />
+                  </i>
+                  <h3>{{category.name}}</h3>
+                  <p>( {{category.jobs.all.count}} )</p>
+                </div>
+              </a>
+            </div>
+        {% endfor %}
+      {% else %}
+        <div class="text-center p-5">
+          <h2>No Category</h2>
+        </div>
+      {% endif %}
+        
+      
     </div>
   </div>
 </section>
