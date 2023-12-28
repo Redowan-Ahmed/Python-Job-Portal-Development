@@ -91,13 +91,18 @@
       {% if categories %}
         {% for category in categories %}
         <div class="col-lg-3 col-md-4 col-sm-6">
-              <a href="job-list.html">
+              <a href="{% url 'categorized-jobs' category.name %}">
                 <div class="category-card">
                   <i>
                   <img src="{{category.icon.url}}" width="80px" height="80px" class="object-fit" />
                   </i>
                   <h3>{{category.name}}</h3>
-                  <p>( {{category.jobs.all.count}} )</p>
+
+                  {% if category.jobs.all.count %}
+                    <p>({{category.jobs.all.count}}) Open Positions</p>
+                    {% else %}
+                    <p>No open positions at the moment</p>
+                  {% endif %}
 <!--                   {% now "M. d, Y " %}
  -->             </div>
               </a>
@@ -108,8 +113,6 @@
           <h2>No Category</h2>
         </div>
       {% endif %}
-        
-      
     </div>
   </div>
 </section>
@@ -248,89 +251,32 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-3 col-sm-6">
-        <div class="company-card">
-          <div class="company-logo">
-            <a href="job-grid.html">
-              <img
-                src="static/assets/img/top-company/1.png"
-                alt="company logo"
-              />
-            </a>
-          </div>
-          <div class="company-text">
-            <h3>Trophy & Sans</h3>
-            <p>
-              <i class="bx bx-location-plus"></i>
-              Green Lanes, London
-            </p>
-            <a href="job-grid.html" class="company-btn"> 25 Open Position </a>
-          </div>
-        </div>
-      </div>
 
+      {% for company in companies %}
       <div class="col-lg-3 col-sm-6">
         <div class="company-card">
           <div class="company-logo">
-            <a href="job-grid.html">
+            <a href="#">
               <img
-                src="static/assets/img/top-company/2.png"
-                alt="company logo"
+                width="100px"
+                src="{{company.company_logo.url}}"
+                alt="{{company.company_name}}"
               />
             </a>
           </div>
           <div class="company-text">
-            <h3>Trout Design</h3>
+            <h3>{{company.company_name}}</h3>
             <p>
               <i class="bx bx-location-plus"></i>
-              Park Avenue, Mumbai
+              {{company.location}}
             </p>
-            <a href="job-grid.html" class="company-btn"> 35 Open Position </a>
+            <a href="#" class="company-btn"> {{company.jobs.all.count}} Open Position </a>
           </div>
         </div>
       </div>
+      {% endfor %}
 
-      <div class="col-lg-3 col-sm-6">
-        <div class="company-card">
-          <div class="company-logo">
-            <a href="job-grid.html">
-              <img
-                src="static/assets/img/top-company/3.png"
-                alt="company logo"
-              />
-            </a>
-          </div>
-          <div class="company-text">
-            <h3>Resland LTD</h3>
-            <p>
-              <i class="bx bx-location-plus"></i>
-              Betas Quence, London
-            </p>
-            <a href="job-grid.html" class="company-btn"> 20 Open Position </a>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-lg-3 col-sm-6">
-        <div class="company-card">
-          <div class="company-logo">
-            <a href="job-grid.html">
-              <img
-                src="static/assets/img/top-company/4.png"
-                alt="company logo"
-              />
-            </a>
-          </div>
-          <div class="company-text">
-            <h3>Lawn Hopper</h3>
-            <p>
-              <i class="bx bx-location-plus"></i>
-              Wellesley Rd, London
-            </p>
-            <a href="job-grid.html" class="company-btn"> 45 Open Position </a>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>

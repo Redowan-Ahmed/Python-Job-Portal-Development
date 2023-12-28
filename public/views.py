@@ -1,4 +1,4 @@
-from unicodedata import category
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import redirect, render
 from .models import SupportContact
@@ -7,7 +7,7 @@ from .forms import SupportContactForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate , login, logout
 from accounts.models import User
-from hr.models import JobCategory, JobPost
+from hr.models import JobCategory, JobPost, Company
 from datetime import date
 from django.shortcuts import get_object_or_404
 
@@ -17,10 +17,12 @@ currentDate = date.today()
 def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
     jobs = JobPost.objects.filter(last_date_of_apply__gte = currentDate)[:6]
+    companies = Company.objects.all()[:4]
     context = {
         'categories': categories,
         'today': currentDate,
-        'jobs': jobs
+        'jobs': jobs,
+        'companies': companies
     }
     return render(request, 'index.html', context= context)
 
@@ -90,6 +92,27 @@ def Contact(request):
     else:
         return render(request, 'contact.html')
 
+def CategorizedJobs(request, category):
+    try:
+        category = JobCategory.objects.get(name = category)
+        jobs = JobPost.objects.filter(job_category = category, last_date_of_apply__gte = currentDate).order_by("-created_at")
+        paginator = Paginator(jobs, 8)
+        page_number = request.GET.get("page")
+        try:
+            page_obj = paginator.get_page(page_number)
+            context = {
+                'category': category,
+                'jobs': paginator.object_list,
+                "page_obj": page_obj
+            }
+            return render(request, 'categorized-jobs.html', context)
+        except Exception as e:
+            print(e)
+            raise Http404('No more page Exit')
+    except Exception as e:
+        print("Error in categorized jobs", str(e))
+        raise Http404('page is not found')
+
 
 def Jobs(request):
     return render(request, 'job-grid.html')
@@ -98,10 +121,9 @@ def Jobs(request):
 def JobDetails(request, pk):
     try:
         job = get_object_or_404(JobPost, pk=pk)
-        related_jobs = JobPost.objects.filter(job_category__name = job.job_category.name, last_date_of_apply__gte = currentDate).exclude(pk=job.pk)[:5]
+        related_jobs = JobPost.objects.filter(job_category__name = job.job_category.name, last_date_of_apply__gte = currentDate).exclude(pk=job.pk).order_by('-created_at')[:5]
         job_keyword = job.keywords.split(',')
         context = {
-            'pk':pk,
             'job': job,
             'related_jobs': related_jobs,
             'keywords':job_keyword

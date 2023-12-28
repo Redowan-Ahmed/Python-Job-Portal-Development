@@ -43,7 +43,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-md-2">
                                                 <div class="company-logo">
-                                                    <img src="{{job.thumbnail.url}}" alt="logo">
+                                                    <img width="80px" src="{{job.company.company_logo.url}}" alt="logo">
                                                 </div>
                                             </div>
                                             <div class="col-md-10">
@@ -63,7 +63,6 @@
                                                             {{job.looking_position}}
                                                         </li>
                                                     </ul>
-                                                    
                                                     <span>
                                                         <i class='bx bx-paper-plane' ></i>
                                                         Apply Before: {{job.last_date_of_apply}}
@@ -90,19 +89,19 @@
                                                     <tbody>
                                                         <tr>
                                                             <td><span>Company: </span></td>
-                                                            <td>{{job.company_name}}</td>
+                                                            <td>{{job.company.company_name}}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><span>Location: </span></td>
-                                                            <td>Wellesley Rd, London</td>
+                                                            <td>{{job.company.location}}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><span>Job Type: </span></td>
-                                                            <td>Full Time</td>
+                                                            <td>{{job.job_type}}</td>
                                                         </tr>
                                                         <tr>
                                                             <td><span>Email: </span></td>
-                                                            <td><a href="mailto:{{job.email}}">{{job.email}}</a></td>
+                                                            <td><a href="mailto:{{job.company.email}}">{{job.company.email}}</a></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -124,7 +123,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td><span>Website: </span></td>
-                                                            <td><a href="#">www.company.com</a></td>
+                                                            <td><a href="{{job.company.website}}">{{job.company.website}}</a></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>

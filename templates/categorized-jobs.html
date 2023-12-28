@@ -1,0 +1,152 @@
+{% extends './components/Base.html' %}
+
+
+{% block content %}
+{% include './components/header.html' %}
+
+
+
+        <!-- Page Title Start -->
+        <section class="page-title title-bg4">
+            <div class="d-table">
+                <div class="d-table-cell">
+                    <h2>{{category}}</h2>
+                    <ul>
+                        <li>
+                            <a href="{% url 'home' %}">Home</a>
+                        </li>
+                        <li>{{category}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="lines">
+                <div class="line"></div>
+                <div class="line"></div>
+                <div class="line"></div>
+            </div>
+        </section>
+        <!-- Page Title End -->
+<!--         <div>
+            <span>
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+              {% endif %}
+              <span>
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+              </span>
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Next</a>
+              {% endif %}
+            </span>
+          </div> -->
+          {% if jobs %}
+        <!-- Job Section End -->
+        <section class="job-style-two job-list-section pt-100 pb-70">
+            <div class="container">
+
+                <div class="row">
+                    {% for job in jobs %}
+
+                    <div class="col-lg-12">
+                        <div class="job-card-two">
+                            <div class="row align-items-center">
+                                <div class="col-md-1">
+                                    <div class="company-logo">
+                                        <a href="{% url 'job' job.pk %}"></a>
+                                        <img width="80px" src="{{job.company.company_logo.url}}" alt="{{job.company.company_name}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="job-info">
+                                        <h3>
+                                            <a href="{% url 'job' job.pk %}">{{job.title}}</a>
+                                        </h3>
+                                        <ul>
+                                            <li>
+                                                <i class='bx bx-briefcase' ></i>
+                                                {{job.job_category}}
+                                            </li>
+                                            <li>
+                                                <i class='bx bx-briefcase' ></i>
+                                                {{job.salary}}
+                                            </li>
+                                            <li>
+                                                <i class='bx bx-location-plus'></i>
+                                                {{job.company.location}}
+                                            </li>
+                                            <li>
+                                                <i class='bx bx-stopwatch' ></i>
+                                                {{job.created_at.date}}
+                                            </li>
+                                        </ul>
+
+                                        <span>{{job.job_type}}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="theme-btn text-end">
+                                        <a href="{% url 'job' job.pk %}" class="default-btn">
+                                            Browse Job
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+
+                </div>
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <i class='bx bx-chevrons-left bx-fade-left'></i>
+                            </a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link active" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">
+                                <i class='bx bx-chevrons-right bx-fade-right'></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </section>
+        <!-- Job Section End -->
+        {% else %}
+        <h4 style="text-align: center;">No jobs available at the moment.</h4>
+        {% endif %}
+        <!-- Subscribe Section Start -->
+        <section class="subscribe-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="section-title">
+                            <h2>Get New Job Notifications</h2>
+                            <p>Subscribe & get all related jobs notification</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <form class="newsletter-form" data-toggle="validator">
+                            <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
+    
+                            <button class="default-btn sub-btn" type="submit">
+                                Subscribe
+                            </button>
+    
+                            <div id="validator-newsletter" class="form-result"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Subscribe Section End -->
+{% include './components/footer.html' %}
+{% endblock content %}
