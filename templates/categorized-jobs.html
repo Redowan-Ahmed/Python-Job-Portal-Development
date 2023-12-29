@@ -1,7 +1,15 @@
 {% extends './components/Base.html' %}
 
 
+
+{% block meta %}
+    <title>
+        {{category}}
+    </title>
+{% endblock meta %}
+
 {% block content %}
+
 {% include './components/header.html' %}
 
 

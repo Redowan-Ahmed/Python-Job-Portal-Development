@@ -24,28 +24,32 @@
           <p>Find Jobs, Employment & Career Opportunities</p>
           <h1>Drop Resume & Get Your Desire Job!</h1>
 
-          <form class="banner-form">
+          <form class="banner-form" action="{% url 'jobs' %}" method="get">
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Keyword:</label>
+                  <label for="inputkeywords">Keyword:</label>
                   <input
+                    name="keyword"
                     type="text"
                     class="form-control"
-                    id="exampleInputEmail1"
+                    id="inputkeywords"
                     placeholder="Job Title"
+                    required
                   />
                 </div>
               </div>
 
               <div class="col-md-4">
                 <div class="form-group">
-                  <label for="exampleInputEmail2">Location:</label>
+                  <label for="inputlocation">Location:</label>
                   <input
+                    name="location"
                     type="text"
                     class="form-control"
-                    id="exampleInputEmail2"
-                    placeholder="City or State"
+                    id="inputlocation"
+                    placeholder="Country, City or State"
+                    required
                   />
                 </div>
               </div>
@@ -58,15 +62,6 @@
               </div>
             </div>
           </form>
-
-          <ul class="keyword">
-            <li>Trending Keywords:</li>
-            <li><a href="#">Automotive,</a></li>
-            <li><a href="#">Education,</a></li>
-            <li><a href="#">Health</a></li>
-            <li>and</li>
-            <li><a href="#">Care Engineering</a></li>
-          </ul>
         </div>
       </div>
     </div>
@@ -87,7 +82,6 @@
     </div>
 
     <div class="row">
-      
       {% if categories %}
         {% for category in categories %}
         <div class="col-lg-3 col-md-4 col-sm-6">
@@ -110,7 +104,7 @@
         {% endfor %}
       {% else %}
         <div class="text-center p-5">
-          <h2>No Category</h2>
+          <p class="py-5 text-center">No active category available</p>
         </div>
       {% endif %}
     </div>
@@ -131,60 +125,68 @@
     </div>
 
     <div class="row">
-    {% for job in jobs %}
-      <div class="col-sm-6">
-        <div class="job-card">
-          <div class="row align-items-center">
-            <div class="col-lg-3">
-              <div class="thumb-img">
-                <a href="job-details.html">
-                  <img
-                    src="{{job.thumbnail.url}}"
-                    alt="company logo"
-                  />
-                </a>
-              </div>
-            </div>
+      {% if jobs %}
 
-            <div class="col-lg-6">
-              <div class="job-info">
-                <h3>
-                  <a href="{% url 'job' job.pk %}">{{job.title|truncatechars:20}}</a>
-                </h3>
-                <ul>
-                  <li>Via <a href="#">{{job.user.get_full_name}}</a></li>
-                  <li>
-                    <i class="bx bx-location-plus"></i>
-                    {{job.address|truncatechars:30}}
-                  </li>
-                  <li>
-                    <i class="bx bx-filter-alt"></i>
-                    {{job.job_category.name}}
-                  </li>
-                  <li>
-                    <i class="bx bx-briefcase"></i>
-                    {{job.looking_position}}
-                  </li>
-                </ul>
+      {% for job in jobs %}
+        <div class="col-sm-6">
+          <div class="job-card">
+            <div class="row align-items-center">
+              <div class="col-lg-3">
+                <div class="thumb-img">
+                  <a href="job-details.html">
+                    <img
+                      src="{{job.thumbnail.url}}"
+                      alt="company logo"
+                    />
+                  </a>
+                </div>
               </div>
-            </div>
 
-            <div class="col-lg-3">
-              <div class="job-save">
-                <span> {{job.job_type}}</span>
-                <a href="#">
-                  <i class="bx bx-heart"></i>
-                </a>
-                <p>
-                  <i class="bx bx-stopwatch"></i>
-                  {{job.created_at.date}}
-                </p>
+              <div class="col-lg-6">
+                <div class="job-info">
+                  <h3>
+                    <a href="{% url 'job' job.pk %}">{{job.title|truncatechars:20}}</a>
+                  </h3>
+                  <ul>
+                    <li>Via <a href="#">{{job.user.get_full_name}}</a></li>
+                    <li>
+                      <i class="bx bx-location-plus"></i>
+                      {{job.address|truncatechars:30}}
+                    </li>
+                    <li>
+                      <i class="bx bx-filter-alt"></i>
+                      {{job.job_category.name}}
+                    </li>
+                    <li>
+                      <i class="bx bx-briefcase"></i>
+                      {{job.looking_position}}
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="col-lg-3">
+                <div class="job-save">
+                  <span> {{job.job_type}}</span>
+                  <a href="#">
+                    <i class="bx bx-heart"></i>
+                  </a>
+                  <p>
+                    <i class="bx bx-stopwatch"></i>
+                    {{job.created_at.date}}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+
+    {% else %}
+
+      <div class="py-5 text-center">No active job available</div>
+
+    {% endif %}
     </div>
   </div>
 </section>
@@ -251,32 +253,36 @@
     </div>
 
     <div class="row">
+      
+      {% if companies %}
 
-      {% for company in companies %}
-      <div class="col-lg-3 col-sm-6">
-        <div class="company-card">
-          <div class="company-logo">
-            <a href="#">
-              <img
-                width="100px"
-                src="{{company.company_logo.url}}"
-                alt="{{company.company_name}}"
-              />
-            </a>
-          </div>
-          <div class="company-text">
-            <h3>{{company.company_name}}</h3>
-            <p>
-              <i class="bx bx-location-plus"></i>
-              {{company.location}}
-            </p>
-            <a href="#" class="company-btn"> {{company.jobs.all.count}} Open Position </a>
+        {% for company in companies %}
+        <div class="col-lg-3 col-sm-6">
+          <div class="company-card">
+            <div class="company-logo">
+              <a href="#">
+                <img
+                  width="100px"
+                  src="{{company.company_logo.url}}"
+                  alt="{{company.company_name}}"
+                />
+              </a>
+            </div>
+            <div class="company-text">
+              <h3>{{company.company_name}}</h3>
+              <p>
+                <i class="bx bx-location-plus"></i>
+                {{company.location}}
+              </p>
+              <a href="#" class="company-btn"> {{company.jobs.all.count}} Open Position </a>
+            </div>
           </div>
         </div>
-      </div>
-      {% endfor %}
+        {% endfor %}
 
-
+      {% else %}
+        <div class="py-5 text-center">No active Company available</div>
+      {% endif %}
     </div>
   </div>
 </section>

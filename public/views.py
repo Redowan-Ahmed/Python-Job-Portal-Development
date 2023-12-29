@@ -10,6 +10,7 @@ from accounts.models import User
 from hr.models import JobCategory, JobPost, Company
 from datetime import date
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 
 currentDate = date.today()
@@ -115,7 +116,44 @@ def CategorizedJobs(request, category):
 
 
 def Jobs(request):
-    return render(request, 'job-grid.html')
+    if request.GET.get('keyword') and request.GET.get('location'):
+        try:
+            keyword = request.GET.get('keyword')
+            location = request.GET.get('location')
+            jobs = JobPost.objects.filter(Q(title__icontains = keyword) and Q(address__icontains = location) | Q(country__icontains = location) | Q(state__contains = location) | Q(city__contains = location) | Q(company__location__icontains = location) | Q(description__icontains = keyword)| Q(keywords__contains = keyword) | Q(looking_position__contains = keyword)).order_by('-created_at')
+            paginator = Paginator(jobs, 8)
+            page_number = request.GET.get('page')
+            try:
+                page_obj = paginator.get_page(page_number)
+                context = {
+                    'jobs': page_obj.object_list,
+                    "page_obj": page_obj,
+                    'pages': page_obj.number,
+                    'keyword': keyword,
+                    'location': location
+                }
+                return render(request, 'job-grid.html', context= context)
+            except Exception as e:
+                print(e)
+                raise Http404('NO page is available')
+        except Exception as e:
+            print(e)
+            return render(request, 'job-grid.html')
+    else:
+        jobs = JobPost.objects.all().order_by('-created_at')
+        paginator = Paginator(jobs, 8)
+        page_number = request.GET.get("page")
+        try:
+            page_obj = paginator.get_page(page_number)
+            context = {
+                'jobs': page_obj.object_list,
+                "page_obj": page_obj
+            }
+            return render(request, 'job-grid.html', context=context)
+        except Exception as e:
+            print(e)
+            raise Http404('No more page Exit')
+
 
 
 def JobDetails(request, pk):

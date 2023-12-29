@@ -23,24 +23,7 @@
                 <a href="{% url 'about' %}" class="nav-link {% if request.META.PATH_INFO == '/about-us/' %} active {% endif %}">About</a>
               </li>
               <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle">Jobs</a>
-                <ul class="dropdown-menu">
-                  <li class="nav-item">
-                    <a href="find-job.html" class="nav-link">Find A Job</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="post-job.html" class="nav-link">Post A Job</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="job-list.html" class="nav-link">Job List</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="job-grid.html" class="nav-link">Job Grid</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="job-details.html" class="nav-link">Job Details</a>
-                  </li>
-                </ul>
+                <a href="{% url 'jobs' %}" class="nav-link {% if 'jobs' in request.META.PATH_INFO  %} active {% endif %}">Jobs</a>
               </li>
               <li class="nav-item">
                 <a href="#" class="nav-link dropdown-toggle">Candidates</a>

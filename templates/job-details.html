@@ -14,12 +14,15 @@
         <section class="page-title title-bg6">
             <div class="d-table">
                 <div class="d-table-cell">
-                    <h2>Job Details</h2>
+                    <h2>{{job.title}} Details</h2>
                     <ul>
                         <li>
                             <a href="{% url 'home' %}">Home</a>
                         </li>
-                        <li>Job Details</li>
+                        <li>
+                            <a href="{% url 'jobs' %}">Jobs</a>
+                        </li>
+                        <li>{{job.title|truncatechars:15}}</li>
                     </ul>
                 </div>
             </div>
@@ -43,7 +46,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-md-2">
                                                 <div class="company-logo">
-                                                    <img width="80px" src="{{job.company.company_logo.url}}" alt="logo">
+                                                    <img width="80px" src="{{job.company.company_logo.url}}" alt="{{job.company.company_name}}">
                                                 </div>
                                             </div>
                                             <div class="col-md-10">
@@ -130,12 +133,22 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="theme-btn">
-                                        <a href="#" class="default-btn">
-                                            Apply Now
-                                        </a>
-                                    </div>
+                                    {% if request.user == job.user %}
+                                        <div class="theme-btn rounded-2 text-center">
+                                            <a href="#" class="default-btn rounded-2 w-100">
+                                                Edit
+                                            </a>
+                                        </div>
+                                    {% else %}
+                                        <div class="theme-btn text-center ">
+                                            <a href="#" class="default-btn rounded-2 w-100">
+                                                Apply Now
+                                            </a>
+                                            {% if not request.user.is_authenticated %}
+                                                <p class="text-center">To apply you must have to <a href="{% url 'signIn' %}">login</a> to your account or <a href="{% url 'signUp' %}">create an account</a> </p>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -146,7 +159,7 @@
                             <h3>Posted By</h3>
                             <div class="posted-by">
                                 {% if job.user.profile_picture %}
-                                    <img width="80px" src="{{job.user.profile_picture.url}}" alt="{{job.user.get_full_name}}">
+                                    <img width="80px" height="80px" src="{{job.user.profile_picture.url}}" alt="{{job.user.get_full_name}}">
                                 {% else %}
                                     <img src="/static/assets/img/client-1.png" alt="{{job.user.get_full_name}}">
                                 {% endif %}
