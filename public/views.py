@@ -120,7 +120,7 @@ def Jobs(request):
         try:
             keyword = request.GET.get('keyword')
             location = request.GET.get('location')
-            jobs = JobPost.objects.filter(Q(title__icontains = keyword) and Q(address__icontains = location) | Q(country__icontains = location) | Q(state__contains = location) | Q(city__contains = location) | Q(company__location__icontains = location) | Q(description__icontains = keyword)| Q(keywords__contains = keyword) | Q(looking_position__contains = keyword)).order_by('-created_at')
+            jobs = JobPost.objects.filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
             paginator = Paginator(jobs, 8)
             page_number = request.GET.get('page')
             try:
