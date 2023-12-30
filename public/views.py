@@ -103,7 +103,7 @@ def CategorizedJobs(request, category):
             page_obj = paginator.get_page(page_number)
             context = {
                 'category': category,
-                'jobs': paginator.object_list,
+                'jobs': page_obj.object_list,
                 "page_obj": page_obj
             }
             return render(request, 'categorized-jobs.html', context)
