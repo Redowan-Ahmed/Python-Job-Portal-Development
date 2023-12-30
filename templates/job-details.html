@@ -196,22 +196,22 @@
                             <h3>Share In</h3>
                             <ul>
                                 <li>
-                                    <a href="#" target="_blank">
+                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
                                         <i class="bx bxl-facebook"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" target="_blank">
+                                    <a href="https://twitter.com/intent/tweet?text={{job.title}}&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
                                         <i class="bx bxl-twitter"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" target="_blank">
+                                    <a href="https://pinterest.com/pin/create/button/?url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&media={{request.META.HTTP_HOST}}{{job.thumbnail.url}}&description={{job.title}}" target="_blank">
                                         <i class="bx bxl-pinterest"></i>
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" target="_blank">
+                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&title={{job.title}}" target="_blank">
                                         <i class="bx bxl-linkedin"></i>
                                     </a>
                                 </li>
