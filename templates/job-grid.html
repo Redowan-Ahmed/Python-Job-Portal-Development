@@ -3,7 +3,7 @@
 
 
 {% block meta %}
-	
+	<title>Jobs</title>
 {% endblock meta %}
 	
 
@@ -99,24 +99,68 @@
 					{% endif %}
 
                 </div>
-                
+				{% if page_obj.has_other_pages %}
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+
+					{% if page_obj.has_previous %}
+
+                        <li class="page-item">
+                            <a class="page-link"
+									{% if query %}
+									href="?keyword={{keyword}}&location={{location}}&page={{page_obj.previous_page_number}}"
+									{% else %}
+									href="?page={{page_obj.previous_page_number}}"
+									{% endif %} tabindex="-{{page_obj.previous_page_number}}">
                                 <i class='bx bx-chevrons-left bx-fade-left'></i>
                             </a>
                         </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link active" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <i class='bx bx-chevrons-right bx-fade-right'></i>
+						{% else %}
+						<li class="page-item disabled">
+                            <a class="page-link" href="#"  aria-disabled="true">
+                                <i class='bx bx-chevrons-left text-dark'></i>
                             </a>
                         </li>
+						{% endif %}
+
+						{% if page_obj.has_other_pages %}
+							{% for page in page_obj.paginator %}
+								<li class="page-item"><a class="page-link {% if page_obj.number == page.number %} active {% endif %}"
+										{% if query %}
+										href="?keyword={{keyword}}&location={{location}}&page={{page.number}}"
+										{% else %}
+										href="?page={{page.number}}"
+										{% endif %}
+									>{{page.number}}</a></li>
+							{% endfor %}
+						{% endif %}
+
+
+						{% if page_obj.has_next %}
+							<li class="page-item">
+								<a class="page-link"
+								{% if query %}
+									href="?keyword={{keyword}}&location={{location}}&page={{page_obj.next_page_number}}"
+								{% else %}
+									href="?page={{page_obj.next_page_number}}"
+								{% endif %}
+								>
+									<i class='bx bx-chevrons-right bx-fade-right'></i>
+								</a>
+							</li>
+						{% else %}
+							<li class="page-item disabled">
+								<a class="page-link" href="#"
+								aria-disabled="true"
+								>
+									<i class='bx bx-chevrons-right text-dark'></i>
+								</a>
+							</li>
+						{% endif %}
+
                     </ul>
                 </nav>
+				{% endif %}
 			</div>
 		</section>
 		<!-- Jobs Section End -->

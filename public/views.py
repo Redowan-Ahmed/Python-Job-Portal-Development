@@ -130,7 +130,8 @@ def Jobs(request):
                     "page_obj": page_obj,
                     'pages': page_obj.number,
                     'keyword': keyword,
-                    'location': location
+                    'location': location,
+                    'query': True,
                 }
                 return render(request, 'job-grid.html', context= context)
             except Exception as e:
