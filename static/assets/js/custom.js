@@ -134,7 +134,7 @@ jQuery(function ($) {
         }
         $("#validator-newsletter").removeClass().addClass(msgClasses).text(msg);
     }
-    
+
     // AJAX MailChimp
     $(".newsletter-form").ajaxChimp({
         url: "https://envytheme.us20.list-manage.com/subscribe/post?u=60e1ffe2e8a68ce1204cd39a5&amp;id=42d6d188d9", // Your url MailChimp
@@ -161,7 +161,7 @@ jQuery(function ($) {
     });
 
     $('.top-btn').on('click',function(){
-        $("html, body").animate({ scrollTop: 0 }, 2500);
+        $("html, body").animate({ scrollTop: 0 }, 200);
         return false;
     });
     
@@ -177,12 +177,12 @@ jQuery(function ($) {
 
 // function to set a given theme/color-scheme
 function setTheme(themeName) {
-    localStorage.setItem('jovie_theme', themeName);
+    localStorage.setItem('REDJOB_theme', themeName);
     document.documentElement.className = themeName;
 }
 // function to toggle between light and dark theme
 function toggleTheme() {
-    if (localStorage.getItem('jovie_theme') === 'theme-dark') {
+    if (localStorage.getItem('REDJOB_theme') === 'theme-dark') {
         setTheme('theme-light');
     } else {
         setTheme('theme-dark');
@@ -190,7 +190,7 @@ function toggleTheme() {
 }
 // Immediately invoked function to set the theme on initial load
 (function () {
-    if (localStorage.getItem('jovie_theme') === 'theme-dark') {
+    if (localStorage.getItem('REDJOB_theme') === 'theme-dark') {
         setTheme('theme-dark');
         document.getElementById('slider').checked = false;
     } else {

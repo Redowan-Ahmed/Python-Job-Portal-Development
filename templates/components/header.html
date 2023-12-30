@@ -1,7 +1,6 @@
 <div class="navbar-area">
     <div class="mobile-nav">
       <a href="{% url 'home' %}" class="logo">
-
         <img src="/static/assets/img/logo.png" alt="logo" />
       </a>
     </div>
@@ -120,9 +119,21 @@
               </li>
             </ul>
             {% if request.user.is_authenticated %}
-            <div class="other-option">
+            <div class="other-option d-lg-flex flex-row flex-wrap gap-2 align-items-center">
               <a href=" {% url 'logout' %}" class="signup-btn">Logout</a>
-              <a href=" {% url 'account' %}" class="signin-btn">Account</a>
+              <!-- <a href=" {% url 'account' %}" class="signin-btn">Account</a> -->
+              <a href=" {% url 'account' %}" class=" d-flex flex-row flex-wrap gap-2 align-items-center btn signin-btn pe-2 px-1 rounded-pill"> 
+              {% if request.user.profile_picture %}
+                  <img width="30px" height="30px" class="object-fit bg-dark rounded-circle" src="{{request.user.profile_picture.url}}" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}" alt="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}">
+                {% else %}
+                  <img class="object-fit bg-dark rounded-circle"  width="30px" height="30px" src="/static/assets/img/account.jpg" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}" alt="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}">
+              {% endif %}
+                 Hi,
+                 {% if request.user.first_name %}
+                    {{request.user.first_name}}
+                  {% else %}
+                    There
+                 {% endif %}</a>
             </div>
             {% else %}
             <div class="other-option">

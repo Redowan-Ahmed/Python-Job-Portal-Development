@@ -221,7 +221,8 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+DOMAIN = ('localhost:3000')
+SITE_NAME = ('Mercegrower Job portal')
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = 'smtp.titan.email'
@@ -230,5 +231,5 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'no-reply@mercegrower.com'
 EMAIL_HOST_PASSWORD = 'Redowan@42311'
-DEFAULT_FROM_EMAIL = 'no-reply@mercegrower.com'
+DEFAULT_FROM_EMAIL = 'MerceGrower <no-reply@mercegrower.com>'
 SERVER_EMAIL = 'no-reply@mercegrower.com'
