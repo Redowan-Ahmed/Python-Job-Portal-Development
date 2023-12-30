@@ -12,8 +12,6 @@
 
 {% include './components/header.html' %}
 
-
-
         <!-- Page Title Start -->
         <section class="page-title title-bg4">
             <div class="d-table">
@@ -34,19 +32,6 @@
             </div>
         </section>
         <!-- Page Title End -->
-<!--         <div>
-            <span>
-              {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-              {% endif %}
-              <span>
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-              </span>
-              {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}">Next</a>
-              {% endif %}
-            </span>
-          </div> -->
           {% if jobs %}
         <!-- Job Section End -->
         <section class="job-style-two job-list-section pt-100 pb-70">
@@ -56,7 +41,7 @@
                     {% for job in jobs %}
 
                     <div class="col-lg-12">
-                        <div class="job-card-two">
+                        <div class="job-card-two rounded-2">
                             <div class="row align-items-center">
                                 <div class="col-md-1">
                                     <div class="company-logo">
@@ -88,12 +73,12 @@
                                             </li>
                                         </ul>
 
-                                        <span>{{job.job_type}}</span>
+                                        <span class="rounded-2">{{job.job_type}}</span>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="theme-btn text-end">
-                                        <a href="{% url 'job' job.pk %}" class="default-btn">
+                                    <div class="theme-btn text-end ">
+                                        <a href="{% url 'job' job.pk %}" class="default-btn rounded-2">
                                             Browse Job
                                         </a>
                                     </div>
@@ -162,7 +147,9 @@
         </section>
         <!-- Job Section End -->
         {% else %}
-        <h4 style="text-align: center;">No jobs available at the moment.</h4>
+        <div class="my-5">
+            <p class="text-center py-5">No jobs available at the moment.</p>
+        </div>
         {% endif %}
         <!-- Subscribe Section Start -->
         <section class="subscribe-section">
@@ -178,11 +165,11 @@
                     <div class="col-md-6">
                         <form class="newsletter-form" data-toggle="validator">
                             <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
-    
+
                             <button class="default-btn sub-btn" type="submit">
                                 Subscribe
                             </button>
-    
+
                             <div id="validator-newsletter" class="form-result"></div>
                         </form>
                     </div>

@@ -40,10 +40,10 @@
 
 						{% for job in jobs %}
 							<div class="col-md-6">
-								<div class="job-card">
+								<div class="job-card rounded-2">
 									<div class="row align-items-center">
 										<div class="col-lg-3">
-											<div class="thumb-img">
+											<div class="thumb-img rounded-2">
 												<a href="{% url 'job' job.pk %}">
 													<img src="{{job.company.company_logo.url}}" alt="{{job.company.company_name}}">
 												</a>

@@ -15,7 +15,7 @@
                             <div class="profile-thumb">
 
                                 {% if request.user.profile_picture %}
-                                    <img width="150px" height="150px" src="{{request.user.profile_picture.url}}" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}"  alt="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %} Account image {% endif %}">
+                                    <img class="object-fit" width="150px" height="150px" src="{{request.user.profile_picture.url}}" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}"  alt="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %} Account image {% endif %}">
                                 {% else %}
                                     <img width="150px" height="150px" src="/static/assets/img/account.jpg" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}" alt="account holder image">
                                 {% endif %}
