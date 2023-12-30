@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'mathfilters',
+    "debug_toolbar",
 
     # Inner Apps
     'accounts',
@@ -62,8 +63,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    #Debug
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 ROOT_URLCONF = 'config.urls'
 
 AUTH_USER_MODEL = 'accounts.User'

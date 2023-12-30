@@ -17,7 +17,10 @@ urlpatterns = [
     path('contact-us/', Contact , name='contact'),
     path('jobs/', Jobs , name='jobs'),
     path('job-detail/<pk>/', JobDetails, name='job'),
-    path('jobs/category/<category>/', CategorizedJobs, name='categorized-jobs')
+    path('jobs/category/<category>/', CategorizedJobs, name='categorized-jobs'),
+    
+    # Debug
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
