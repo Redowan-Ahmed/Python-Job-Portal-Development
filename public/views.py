@@ -1,7 +1,8 @@
+from unicodedata import category
 from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import redirect, render
-from .models import SupportContact
+from .models import SupportContact, BlogPost, Category, Comment
 from django.contrib import messages
 from .forms import SupportContactForm
 from django.contrib.auth.decorators import login_required
@@ -19,11 +20,13 @@ def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
     companies = Company.objects.select_related('user').all()[:4]
+    posts = BlogPost.objects.select_related('category').all().order_by('-created_at')[:3]
     context = {
         'categories': categories,
         'today': currentDate,
         'jobs': jobs,
-        'companies': companies
+        'companies': companies,
+        'posts': posts
     }
     return render(request, 'index.html', context= context)
 
@@ -171,3 +174,35 @@ def JobDetails(request, pk):
     except Exception as e:
         print(e)
         raise Http404("Page not found")
+
+
+
+def BlogDetails(request, slug):
+    try:
+        blog = get_object_or_404(BlogPost, slug=slug)
+        if request.method == 'POST':
+            if request.user.is_authenticated:
+                comment = request.POST.get('comment')
+                commenter = request.user
+                Comment.objects.create(comment = comment, user = commenter, post = blog)
+                return redirect('blog', slug)
+            else:
+                return redirect('blog', slug)
+        else:
+            try:
+                categories = Category.objects.all()
+                related_posts = BlogPost.objects.filter(Q(category = blog.category) | Q(tags__icontains = blog.tags))[:4]
+                tags = blog.tags
+                context = {
+                    'blog': blog,
+                    'categories': categories,
+                    'tags': tags.split(','),
+                    'related_posts': related_posts
+                }
+                return render(request, 'blog-details.html', context= context)
+            except Exception as e:
+                print(e)
+                raise Http404("Page not found")
+    except Exception as e:
+        print(e)
+        raise Http404("Something Went Wrong")

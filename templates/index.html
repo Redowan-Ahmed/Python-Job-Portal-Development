@@ -91,14 +91,16 @@
                   <img src="{{category.icon.url}}" width="80px" height="80px" class="object-fit" />
                   </i>
                   <h3>{{category.name}}</h3>
+                {% with categorycount=category.jobs.all.count %}
 
-                  {% if category.jobs.all.count %}
-                    <p>({{category.jobs.all.count}}) Open Positions</p>
+                  {% if categorycount %}
+                    <p>({{categorycount}}) Open Positions</p>
                     {% else %}
                     <p>No open positions at the moment</p>
                   {% endif %}
-<!--                   {% now "M. d, Y " %}
- -->             </div>
+                {% endwith %}
+  <!--                   {% now "M. d, Y " %}-->
+                </div>
               </a>
             </div>
         {% endfor %}
@@ -826,116 +828,52 @@
     </div>
 
     <div class="row">
-      <div class="col-lg-4 col-sm-6">
-        <div class="blog-card">
-          <div class="blog-img">
-            <a href="blog-details.html">
-              <img src="static/assets/img/blog/1.jpg" alt="blog image" />
-            </a>
+      {% if posts %}
+        {% for post in posts %}
+          <div class="col-lg-4 col-sm-6">
+            <div class="blog-card rounded-2">
+              <div class="blog-img">
+                <a href="{% url 'blog' post.slug %}">
+                  <img width="100%" height="250px" src="{{post.thumbnail.url}}" alt="{{post.title}}" class="object-fit rounded-2" />
+                </a>
+              </div>
+              <div class="blog-text">
+                <ul>
+                  <li>
+                    <i class="bx bxs-user"></i>
+                    {{post.author.get_full_name}}
+                  </li>
+                  <li>
+                    <i class="bx bx-calendar"></i>
+                    {{post.created_at.date}}
+                  </li>
+                  <li>
+                    <i class="bx bx-like"></i>
+                    {{post.likes.all.count}}
+                  </li>
+                </ul>
+
+                <h3>
+                  <a href="{% url 'blog' post.slug %}">
+                    {{post.title|truncatechars:50}}
+                  </a>
+                </h3>
+                <p>
+                  {{post.content|truncatechars:160}}
+                </p>
+
+                <a href="{% url 'blog' post.slug %}" class="blog-btn">
+                  Read More
+                  <i class="bx bx-plus bx-spin"></i>
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="blog-text">
-            <ul>
-              <li>
-                <i class="bx bxs-user"></i>
-                Admin
-              </li>
-              <li>
-                <i class="bx bx-calendar"></i>
-                7 Feb, 2021
-              </li>
-            </ul>
+        {% endfor %}
+      {% else %}
+        <p>No Posts Found</p>
+      {% endif %}
 
-            <h3>
-              <a href="blog-details.html">
-                How to Indroduce in Yourself in Job Interview?
-              </a>
-            </h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt.
-            </p>
-
-            <a href="blog-details.html" class="blog-btn">
-              Read More
-              <i class="bx bx-plus bx-spin"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-sm-6">
-        <div class="blog-card">
-          <div class="blog-img">
-            <a href="blog-details.html">
-              <img src="static/assets/img/blog/2.jpg" alt="blog image" />
-            </a>
-          </div>
-          <div class="blog-text">
-            <ul>
-              <li>
-                <i class="bx bxs-user"></i>
-                Admin
-              </li>
-              <li>
-                <i class="bx bx-calendar"></i>
-                7 Feb, 2021
-              </li>
-            </ul>
-
-            <h3>
-              <a href="blog-details.html">
-                Looking for Highly Motivated Product to Build
-              </a>
-            </h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt.
-            </p>
-
-            <a href="blog-details.html" class="blog-btn">
-              Read More
-              <i class="bx bx-plus bx-spin"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-sm-6 offset-sm-3 offset-lg-0">
-        <div class="blog-card">
-          <div class="blog-img">
-            <a href="blog-details.html">
-              <img src="static/assets/img/blog/3.jpg" alt="blog image" />
-            </a>
-          </div>
-          <div class="blog-text">
-            <ul>
-              <li>
-                <i class="bx bxs-user"></i>
-                Admin
-              </li>
-              <li>
-                <i class="bx bx-calendar"></i>
-                7 Feb, 2021
-              </li>
-            </ul>
-
-            <h3>
-              <a href="blog-details.html">
-                The Reason Why Software Develope is the Best Job
-              </a>
-            </h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt.
-            </p>
-
-            <a href="blog-details.html" class="blog-btn">
-              Read More
-              <i class="bx bx-plus bx-spin"></i>
-            </a>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
