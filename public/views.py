@@ -18,7 +18,6 @@ currentDate = date.today()
 def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
-
     companies = Company.objects.select_related('user').all()[:4]
     context = {
         'categories': categories,
