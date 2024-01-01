@@ -1,6 +1,8 @@
+from ast import mod
 from django.db import models
 from base.model import BaseModel
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 
 
@@ -18,3 +20,38 @@ class SupportContact(BaseModel):
 
     def __str__(self):
         return self.full_name
+
+class PostLike(BaseModel):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='liked_posts',db_index=True)
+    post = models.ForeignKey('BlogPost', related_name="likes",on_delete=models.CASCADE, db_index=True)
+
+    def __str__(self):
+        return f'{self.user.get_full_name} liked {self.post.title}'
+
+class Category(BaseModel):
+    name = models.CharField(max_length=100, db_index=True)
+    slug  = models.SlugField(max_length=150, db_index=True)
+
+    def __str__(self):
+        return self.name
+
+class Comment(BaseModel):
+    title = models.CharField(max_length=200, db_index=True)
+    description = models.TextField(max_length=1000)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_comments', db_index=True)
+    reply = models.ForeignKey('self', on_delete= models.CASCADE, related_name='parent_comments', db_index=True)
+    post = models.ForeignKey('BlogPost', on_delete=models.CASCADE, related_name='comments', db_index=True)
+
+    def __str__(self):
+        return f"Comment by: {self.user.username} on {self.post.title}"
+
+class BlogPost(BaseModel):
+    title = models.CharField(max_length=400, db_index=True)
+    content = models.TextField(max_length=6000)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name ='posts', db_index=True)
+    thumbnail = models.ImageField(upload_to='blog-posts')
+    tags = models.CharField(max_length=150, blank=True, default="unknown", db_index=True)
+    category = models.ForeignKey(Category, on_delete= models.CASCADE, related_name='posts', db_index=True)
+
+    def __str__(self):
+        return self.title
