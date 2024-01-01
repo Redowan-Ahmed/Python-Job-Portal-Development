@@ -58,7 +58,7 @@ class HrProfile(BaseModel):
     state = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
     postal_code = models.CharField(max_length=200, blank=True)
-    company = models.ForeignKey(Company, on_delete = models.CASCADE, blank= True )
+    company = models.ForeignKey(Company, on_delete = models.CASCADE, blank= True)
 
     def __str__(self):
         return self.user.email
