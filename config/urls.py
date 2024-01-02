@@ -19,7 +19,7 @@ urlpatterns = [
     path('job-detail/<str:pk>/', JobDetails, name='job'),
     path('jobs/category/<str:category>/', CategorizedJobs, name='categorized-jobs'),
     path('blogs/', Blogs, name='blogs'),
-    path('blog/<slug:slug>/', BlogDetails, name='blog'),
+    path('blogs/<slug:slug>/', BlogDetails, name='blog'),
 
     # Debug
     path("__debug__/", include("debug_toolbar.urls")),

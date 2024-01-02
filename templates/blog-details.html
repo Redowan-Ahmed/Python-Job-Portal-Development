@@ -17,6 +17,7 @@
                         <li>
                             <a href="{% url 'home' %}">Home</a>
                         </li>
+                        <li> <a href="{% url 'blogs' %}">Blogs</a></li>
                         <li>{{blog.title|truncatechars:20}}</li>
                     </ul>
                 </div>
@@ -79,31 +80,43 @@
                         {% if comments %}
                             <h3 class="my-4">Comments</h3>
                             {% for comment in comments %}
-                            
+
                             {% if not comment.reply %}
 
-                            <div class="shadow-sm p-4 mb-3">
+                            <div class="shadow-sm p-4 mb-3 rounded-3">
                                 <div class="row">
-                                    <div class="col-2">
-                                        <img width="50" height="50" src="{{comment.user.profile_picture.url}}" alt="" class="object-fit rounded-circle">
-                                        <h6>{{comment.user.get_full_name}}</h6>
-                                    </div>
-                                    <div class="col-10">
-                                        <p>{{comment.comment}}</p>
+                                    <div class="col-12">
+                                        <div class="pb-3">
+                                            
+                                            {% if comment.user.profile_picture %}
+                                            <span class="me-3"><img width="50" height="50" src="{{comment.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            {% else %}
+                                            <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            {% endif %}
+                                                
+
+                                            <span class="text-black"><b>{{comment.user.get_full_name}}</b></span>
+                                        </div>
+                                        <p class="mb-0">{{comment.comment}}</p>
                                     </div>
                                 </div>
                             </div>
 
                             {% for reply in comment.replies.all %}
 
-                            <div class="shadow-sm py-2 px-4 mb-3 w-75 ms-auto">
+                            <div class="shadow-sm py-2 px-4 mb-3 w-75 ms-auto rounded-3">
                                 <div class="row">
-                                    <div class="col-2">
-                                        <img width="50" height="50" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle">
-                                        <h6>{{reply.user.get_full_name}}</h6>
-                                    </div>
-                                    <div class="col-10">
-                                        <p> Replied: {{reply.comment}}</p>
+                                    <div class="col-12">
+                                        <div class="pb-3">
+                                            {% if reply.user.profile_picture %}
+                                            <span class="me-3"><img width="50" height="50" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            {% else %}
+                                            <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            {% endif %}
+
+                                            <span class="text-black"><b>{{reply.user.get_full_name}}</b></span>
+                                        </div>
+                                        <p class="mb-0">Replied: {{reply.comment}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -112,10 +125,10 @@
 
                             {% endfor %}
                         {% else %}
-                            <div class="comment-form mt-5 p-4">
-                                <p>
+                            <div class="comment-form mt-5 p-4 rounded-3">
+                                <span>
                                     No comments yet, be the first to comment!
-                                </p>
+                                </span>
                             </div>
                         {% endif %}
                         {% endwith %}
@@ -132,7 +145,7 @@
                                             </div>
                                     </div>
                                 </div>
-                                    <button type="submit" class="comment-btn">
+                                    <button type="submit" class="comment-btn rounded-2">
                                         Post a Comment
                                     </button>
                             </form>
@@ -144,7 +157,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="top-0 position-sticky">
-                            <div class="blog-widget blog-search">
+                            <div class="blog-widget blog-search rounded-3">
                                 <form>
                                     <div class="form-group">
                                         <input type="text" class="form-control" placeholder="Search">
@@ -155,14 +168,13 @@
                                 </form>
                             </div>
 
-                        <div class="blog-widget">
+                        <div class="blog-widget rounded-3">
                             <h3>Popular Post</h3>
                             {% for related_post in related_posts %}
                                 <article class="popular-post">
                                     <a href="{% url 'blog' related_post.slug %}" class="blog-thumb">
                                         <img width="100%" height="100%" class="object-fit" src="{{related_post.thumbnail.url}}" alt="{{related_post.title}}">
                                     </a>
-
                                     <div class="info">
                                         <time datetime="2021-04-08">{{related_post.created_at.date}}</time>
                                         <h4>
@@ -174,7 +186,7 @@
 
                         </div>
 
-                        <div class="blog-widget blog-category">
+                        <div class="blog-widget blog-category rounded-3 ">
                             <h3>Category</h3>
                             <ul>
                                 {% for category in categories %}
@@ -190,12 +202,12 @@
                             </ul>
                         </div>
 
-                        <div class="blog-widget blog-tags">
+                        <div class="blog-widget blog-tags rounded-3">
                             <h3>Tags</h3>
                             <ul>
                             {% for tag in tags %}
                                 <li>
-                                    <a href="#">{{tag}}</a>
+                                    <a class="rounded-2" href="#">{{tag}}</a>
                                 </li>
                             {% endfor %}
                         </div>

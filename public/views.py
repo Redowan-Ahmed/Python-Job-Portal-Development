@@ -20,7 +20,7 @@ def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
     companies = Company.objects.select_related('user').all()[:4]
-    posts = BlogPost.objects.select_related('category').filter(status='Published').order_by('-created_at')[:3]
+    posts = BlogPost.objects.select_related('category','author').filter(status='Published').order_by('-created_at')[:3]
     context = {
         'categories': categories,
         'today': currentDate,
@@ -182,7 +182,7 @@ def JobDetails(request, pk):
 
 def Blogs(request):
     try:
-        blogs = BlogPost.objects.filter(status='Published').order_by('-created_at')
+        blogs = BlogPost.objects.select_related('author','category').filter(status='Published').order_by('-created_at')
         paginator = Paginator(blogs, 6)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
@@ -203,14 +203,15 @@ def BlogDetails(request, slug):
             if request.user.is_authenticated:
                 comment = request.POST.get('comment')
                 commenter = request.user
-                Comment.objects.create(comment = comment, user = commenter, post = blog)
+                if not 'sex' in str(comment).lower():
+                    Comment.objects.create(comment = comment, user = commenter, post = blog)
                 return redirect('blog', slug)
             else:
                 return redirect('blog', slug)
         else:
             try:
                 categories = Category.objects.all()
-                related_posts = BlogPost.objects.filter(Q(category = blog.category) | Q(tags__icontains = blog.tags))[:4]
+                related_posts = BlogPost.objects.select_related('author','category').filter(Q(category = blog.category) | Q(tags__icontains = blog.tags)).exclude(slug=slug)[:4]
                 tags = blog.tags
                 context = {
                     'blog': blog,
