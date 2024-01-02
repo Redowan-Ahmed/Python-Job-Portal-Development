@@ -24,7 +24,7 @@
               <li class="nav-item">
                 <a href="{% url 'jobs' %}" class="nav-link {% if 'jobs' in request.META.PATH_INFO  %} active {% endif %}">Jobs</a>
               </li>
-              <li class="nav-item">
+              <!-- <li class="nav-item">
                 <a href="#" class="nav-link dropdown-toggle">Candidates</a>
                 <ul class="dropdown-menu">
                   <li class="nav-item">
@@ -99,20 +99,9 @@
                     >
                   </li>
                 </ul>
-              </li>
+              </li> -->
               <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle">Blog</a>
-                <ul class="dropdown-menu">
-                  <li class="nav-item">
-                    <a href="blog.html" class="nav-link">Blog</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="blog-two" class="nav-link">Blog Two</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="blog-details.html" class="nav-link">Blog Details</a>
-                  </li>
-                </ul>
+                <a href="{% url 'blogs' %}" class="nav-link">Blogs</a>
               </li>
               <li class="nav-item">
                 <a href="{% url 'contact' %}" class="nav-link {% if request.META.PATH_INFO == '/contact-us/' %} active {% endif %}">Contact Us</a>

@@ -54,6 +54,8 @@ class BlogPost(BaseModel):
     tags = models.CharField(max_length=150, blank=True, default="unknown", db_index=True)
     category = models.ForeignKey(Category, on_delete= models.CASCADE, related_name='posts', db_index=True)
     slug = models.SlugField(max_length=500, unique=True, db_index=True, blank=True)
+    STATUS_CHOICES = (('Published', 'Published'), ('Draft', "Draft"))
+    status = models.CharField(max_length=100, choices= STATUS_CHOICES, default='Published')
 
     def __str__(self):
         return self.title

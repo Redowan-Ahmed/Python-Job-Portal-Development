@@ -2,13 +2,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from public.views import index, Account, AboutUs, Contact, Jobs, JobDetails, SignOut, CategorizedJobs, BlogDetails
+from public.views import index, Account, AboutUs, Contact, Jobs, JobDetails, SignOut, CategorizedJobs, BlogDetails, Blogs
 from accounts.views import CustomLogin, CustomSignUp
 
 urlpatterns = [
+    path('', index , name='home'),
     path('admin/', admin.site.urls),
     path('all/accounts/', include('allauth.urls')),
-    path('', index , name='home'),
     path('sign-in/', CustomLogin.as_view(), name='signIn'),
     path('sign-up/', CustomSignUp.as_view() , name='signUp'),
     path('logout/', SignOut , name='logout'),
@@ -17,7 +17,8 @@ urlpatterns = [
     path('contact-us/', Contact , name='contact'),
     path('jobs/', Jobs , name='jobs'),
     path('job-detail/<str:pk>/', JobDetails, name='job'),
-    path('jobs/category/<category>/', CategorizedJobs, name='categorized-jobs'),
+    path('jobs/category/<str:category>/', CategorizedJobs, name='categorized-jobs'),
+    path('blogs/', Blogs, name='blogs'),
     path('blog/<slug:slug>/', BlogDetails, name='blog'),
 
     # Debug

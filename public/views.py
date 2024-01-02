@@ -20,7 +20,7 @@ def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
     companies = Company.objects.select_related('user').all()[:4]
-    posts = BlogPost.objects.select_related('category').all().order_by('-created_at')[:3]
+    posts = BlogPost.objects.select_related('category').filter(status='Published').order_by('-created_at')[:3]
     context = {
         'categories': categories,
         'today': currentDate,
@@ -71,7 +71,11 @@ def Account(request):
 
 
 def AboutUs(request):
-    return render(request, 'about.html')
+    blogs = BlogPost.objects.filter(status="Published").order_by('-created_at')[:3]
+    context= {
+        'blogs': blogs
+    }
+    return render(request, 'about.html', context)
 
 
 def Contact(request):
@@ -175,6 +179,21 @@ def JobDetails(request, pk):
         print(e)
         raise Http404("Page not found")
 
+
+def Blogs(request):
+    try:
+        blogs = BlogPost.objects.filter(status='Published').order_by('-created_at')
+        paginator = Paginator(blogs, 6)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            'blogs': page_obj.object_list,
+            'page_obj': page_obj
+        }
+        return render(request, 'blog.html', context=context)
+    except Exception as e:
+        print(e)
+        raise Http404('Something Went wrong')
 
 
 def BlogDetails(request, slug):
