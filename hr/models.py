@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import RegexValidator
 from django.conf import settings
 from base.model import BaseModel
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class JobCategory(BaseModel):
@@ -21,8 +22,8 @@ class JobPost(BaseModel):
         JobCategory, models.CASCADE, related_name='jobs', db_index=True)
     thumbnail = models.ImageField(upload_to='job-thumbnail', default=None)
     title = models.CharField(max_length=300, db_index=True)
-    description = models.TextField(max_length=5000, default=None)
-    requirements = models.TextField(max_length=5000, default=None)
+    description = RichTextUploadingField(max_length=5000, default=None)
+    requirements = RichTextUploadingField(max_length=5000, default=None)
     minimum_experience = models.PositiveIntegerField(default=0, blank=True)
     job_type = models.CharField(
         max_length=100, default='Full Time', blank=True)

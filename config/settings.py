@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'mathfilters',
-    "debug_toolbar",
+    'debug_toolbar',
+    'ckeditor_uploader',
+    'ckeditor',
 
     # Inner Apps
     'accounts',
@@ -223,6 +225,9 @@ MEDIA_ROOT = BASE_DIR /'uploads'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+CKEDITOR_UPLOAD_PATH = "uploads/fieldImages/"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -240,3 +245,11 @@ EMAIL_HOST_USER = 'no-reply@mercegrower.com'
 EMAIL_HOST_PASSWORD = 'Redowan@42311'
 DEFAULT_FROM_EMAIL = 'MerceGrower <no-reply@mercegrower.com>'
 SERVER_EMAIL = 'no-reply@mercegrower.com'
+
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+}

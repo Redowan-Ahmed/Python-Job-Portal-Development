@@ -3,7 +3,8 @@ from base.model import BaseModel
 from django.core.validators import RegexValidator
 from django.conf import settings
 from django.utils.text import slugify
-import uuid
+from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 class SupportContact(BaseModel):
     full_name = models.CharField(max_length=100)
@@ -35,7 +36,7 @@ class Category(BaseModel):
         return self.name
 
 class Comment(BaseModel):
-    comment = models.TextField(max_length=1000)
+    comment = RichTextField(max_length=1000)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_comments', db_index=True)
     reply = models.ForeignKey('self', on_delete= models.CASCADE, related_name='replies', db_index=True, blank=True, null=True)
     post = models.ForeignKey('BlogPost', on_delete=models.CASCADE, related_name='comments', db_index=True)
@@ -48,7 +49,7 @@ class Comment(BaseModel):
 
 class BlogPost(BaseModel):
     title = models.CharField(max_length=400, db_index=True)
-    content = models.TextField(max_length=6000)
+    content = RichTextUploadingField(max_length=6000)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name ='posts', db_index=True)
     thumbnail = models.ImageField(upload_to='blog-posts')
     tags = models.CharField(max_length=150, blank=True, default="unknown", db_index=True)
