@@ -77,11 +77,17 @@
 
                                     <div class="details-text">
                                         <h3>Description</h3>
-                                        <p>{{job.description}}</p>
+                                        {% autoescape off %}
+                                            {{job.description}}
+                                        {% endautoescape %}
                                     </div>
                                     <div class="details-text">
                                         <h3>Requirements</h3>
-                                    <p>{{job.requirements}}</p>
+                                <p class="text-black" >
+                                    {% autoescape off %}
+                                        {{job.requirements}}
+                                    {% endautoescape %}
+                                </p>
                                     </div>
 
                                     <div class="details-text">
@@ -338,11 +344,11 @@
                     <div class="col-md-6">
                         <form class="newsletter-form" data-toggle="validator">
                             <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
-    
+
                             <button class="default-btn sub-btn" type="submit">
                                 Subscribe
                             </button>
-    
+
                             <div id="validator-newsletter" class="form-result"></div>
                         </form>
                     </div>

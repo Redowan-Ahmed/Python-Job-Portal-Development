@@ -12,8 +12,37 @@
                 <div class="row">
                 {% include "./components/accountSidebar.html" %}
                     <div class="col-md-8">
-                       <div class="account-details">
-                          <!--    <h3>Basic Information</h3>
+                    <div class="account-details">
+                        <h3>Dashboard</h3>
+                        <div class="row">
+
+                            {% if request.user.is_hr %}
+                                <div class="col-md-4">
+                                    <div class="text-center p-5 shadow rounded-2">
+                                        <h2>{{total_active_jobs}}</h2>
+                                        <p>Active Jobs</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center p-5 shadow rounded-2">
+                                        <h2>{{total_jobs}}</h2>
+                                        <p>Total Job Posts</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="text-center p-5 shadow rounded-2">
+                                        <h2>{{total_companies}}</h2>
+                                        <p>Total Companies</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="py-5">
+                            <h3>My Address</h3>
+                            <iframe height="400px" class="rounded-2 w-100" src="https://maps.google.com/maps?&amp;q=dhaka,rayerbag,282/2, merajnagar&amp;output=embed" frameborder="0"></iframe>
+                        </div>
+
+                        <!--    <h3>Basic Information</h3>
                             <form class="basic-info">
                                 <div class="row">
                                     <div class="col-md-6">

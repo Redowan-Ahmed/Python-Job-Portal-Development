@@ -20,7 +20,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="exampleInput1">Job Title</label>
-                                            <input type="text" class="form-control" id="exampleInput1" placeholder="Job Title or Keyword" required>
+                                            <input name="title" type="text" class="form-control" id="exampleInput1" placeholder="Job Title or Keyword" required>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -37,22 +37,29 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Company Name</label>
-                                            <input type="text" class="form-control" id="exampleInput2" placeholder="Company Name" required>
+                                            <label>Looking for ?</label>
+                                            <input name="looking_position" type="text" class="form-control" id="exampleInput5" placeholder="e.g. Full Stack Engineer" required>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Company Email</label>
-                                            <input type="email" class="form-control" id="exampleInput3" placeholder="e.g. hello@company.com" required>
+                                            <label>Country</label>
+                                            <input name="country" type="text" class="form-control" id="exampleInput5" placeholder="e.g. United Kingdom" required>
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Company Website (Optional)</label>
-                                            <input name="" type="text" class="form-control" id="exampleInput4" placeholder="e.g www.companyname.com">
+                                            <label>Company</label>
+                                            <select name="company" class="form-select form-control" title="Company">
+                                                <option value="" selected disabled hidden>Select The Company</option>
+                                                {% if companies %}
+                                                {% for company in companies %}
+                                                    <option value="{{company.id}}">{{company.company_name}}</option>
+                                                {% endfor %}
+                                                {% else %}
+                                                <option><a href="{% url 'home' %}">No Companies Available! Please create one first.</a></option>
+                                                {% endif %}
+                                            </select>
                                         </div>
                                     </div>
 
@@ -93,7 +100,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Experience</label>
-                                            <input type="text" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
+                                            <input name="experience" type="number" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Last Apply Date</label>
+                                            <input name="last_date_of_apply" type="date" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
                                         </div>
                                     </div>
 
@@ -159,9 +173,7 @@
         {% include './components/footer.html' %}
 
         <script>
-            var editor1cfg = {}
-            editor1cfg.toolbar = "basic";
-            var editor1 = new RichTextEditor("#description_editor", editor1cfg);
-            var editor2 = new RichTextEditor("#job_requirment", editor1cfg);
+            var editor1 = new RichTextEditor("#description_editor");
+            var editor2 = new RichTextEditor("#job_requirment");
         </script>
         {% endblock content %}

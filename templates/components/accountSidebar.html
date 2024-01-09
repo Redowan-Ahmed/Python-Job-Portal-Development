@@ -25,8 +25,14 @@
 
             {% if request.user.is_hr %}
                 <li>
+                    <a href="{% url 'posted-jobs' %}" class="{% if request.META.PATH_INFO == '/dashboard/jobs/' %} active {% endif %}">
+                        <i class='bx bx-briefcase-alt-2'></i>
+                        Posted Jobs
+                    </a>
+                </li>
+                <li>
                     <a href="{% url 'post-job' %}" class="{% if request.META.PATH_INFO == '/dashboard/post-job/' %} active {% endif %}">
-                        <i class='bx bx-user'></i>
+                        <i class='bx bx-pen'></i>
                         Post Job
                     </a>
                 </li>
