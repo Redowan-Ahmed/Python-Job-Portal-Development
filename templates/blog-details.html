@@ -55,8 +55,9 @@
 										{{blog.likes.all.count}}
 									</li>
 									<li>
+                                        <a href="#comments" class="text-black" title="comments" >
 										<i class='bx bx-comment'></i>
-										{{blog.comments.all.count}}
+										{{blog.comments.all.count}}</a>
 									</li>
 								</ul>
                             </div>
@@ -75,9 +76,10 @@
                                     {% endfor %}
                                 </ul>
                             </div>
-
+                            <div id="comments">
                         {% with comments=blog.comments.all %}
                         {% if comments %}
+                        
                             <h3 class="my-4">Comments</h3>
                             {% for comment in comments %}
 
@@ -87,7 +89,6 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="pb-3">
-                                            
                                             {% if comment.user.profile_picture %}
                                             <span class="me-3"><img width="50" height="50" src="{{comment.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
                                             {% else %}
@@ -107,11 +108,11 @@
                             <div class="shadow-sm py-2 px-4 mb-3 w-75 ms-auto rounded-3">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="pb-3">
+                                        <div class="pb-2">
                                             {% if reply.user.profile_picture %}
-                                            <span class="me-3"><img width="50" height="50" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            <span class="me-2"><img width="30" height="30" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
                                             {% else %}
-                                            <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                            <span class="me-2"><img width="30" height="30" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
                                             {% endif %}
 
                                             <span class="text-black"><b>{{reply.user.get_full_name}}</b></span>
@@ -154,6 +155,7 @@
                             <a href="{% url 'signIn' %}" class="text-decoration-none text-dark">Login</a> or <a href="{% url 'signUp' %}" class="text-decoration-none text-dark">Create an account</a></p>
                         {% endif %}
                             </div>
+                        </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="top-0 position-sticky">

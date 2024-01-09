@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-t#)chryrh9t6l4v&t#zcs4zn^-8=064g%jo-4woto-$^+22p#0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     #Third Party App
     'allauth',
     'allauth.account',
@@ -77,7 +77,7 @@ ROOT_URLCONF = 'config.urls'
 
 AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = '/sign-in/'
-LOGIN_REDIRECT_URL = '/account/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 
 TEMPLATES = [
     {

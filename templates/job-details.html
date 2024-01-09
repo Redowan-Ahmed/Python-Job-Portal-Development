@@ -141,11 +141,14 @@
                                         </div>
                                     {% else %}
                                         <div class="theme-btn text-center ">
-                                            <a href="#" class="default-btn rounded-2 w-100">
-                                                Apply Now
-                                            </a>
+                                        {% if job.last_date_of_apply >= today %}
+                                            <a type="button" class="default-btn rounded-2 w-100" data-toggle="modal" data-target="#applyModel">Apply Now</a>
+
                                             {% if not request.user.is_authenticated %}
                                                 <p class="text-center">To apply you must have to <a href="{% url 'signIn' %}">login</a> to your account or <a href="{% url 'signUp' %}">create an account</a> </p>
+                                                {% endif %}
+                                            {% else %}
+                                                <a class="default-btn rounded-2 w-100" >Apply date is end</a>
                                             {% endif %}
                                         </div>
                                     {% endif %}
@@ -278,13 +281,49 @@
                         </div>
                     </div>
                     {% endfor %}
-                        
 
                 </div>
             </div>
         </section>
         <!-- Job Section End -->
 {% endif %}
+
+
+
+
+    <div class="modal fade" id="applyModel" tabindex="-1" role="dialog" aria-labelledby="applyModelLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="applyModelLabel">Apply Job Now</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'job-apply' job.id %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+
+                <div class="modal-footer justify-content-center">
+                    <button type="submit" class="btn btn-danger">Apply</button>
+                </div>
+            </form>
+        </div>
+                </div>
+            </div>
+            </div>
+
+
+
+
         <!-- Subscribe Section Start -->
         <section class="subscribe-section">
             <div class="container">

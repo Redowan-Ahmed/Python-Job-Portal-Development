@@ -55,8 +55,6 @@ jQuery(function ($) {
         ]
     })
 
-    // Nice Select
-    $('select').niceSelect();
 
 
     // Tastimonial Two Slider JS

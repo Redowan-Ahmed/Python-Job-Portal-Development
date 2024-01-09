@@ -1,0 +1,154 @@
+{% extends './components/Base.html' %}
+
+{% block meta %}
+	<title>Account</title>
+{% endblock meta %}
+
+{% block content %}
+
+{% include './components/header.html' %}
+        <section class="account-section ptb-100">
+            <div class="container">
+                <div class="row">
+                {% include "./components/accountSidebar.html" %}
+                    <div class="col-md-8">
+                        <div class="account-details">
+                        <h3>Fill the form to post a job</h3>
+                            <form class="needs-validation" method="post">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInput1">Job Title</label>
+                                            <input type="text" class="form-control" id="exampleInput1" placeholder="Job Title or Keyword" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Category</label>
+                                            <select name="category" class="form-select form-control" title="category" required>
+                                                <option value="" disabled selected hidden>Select Category</option>
+                                                {% for category in categories %}
+                                                    <option value="{{category.id}}">{{category.name}}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company Name</label>
+                                            <input type="text" class="form-control" id="exampleInput2" placeholder="Company Name" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company Email</label>
+                                            <input type="email" class="form-control" id="exampleInput3" placeholder="e.g. hello@company.com" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company Website (Optional)</label>
+                                            <input type="text" class="form-control" id="exampleInput4" placeholder="e.g www.companyname.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Location</label>
+                                            <input type="text" class="form-control" id="exampleInput5" placeholder="e.g. London" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Type</label>
+                                            <select class="form-select form-control" title="type">
+                                                <option selected >Job Type</option>
+                                                <option value="1">Full Time</option>
+                                                <option value="2">Part Time</option>
+                                                <option value="4">Project Based</option>
+                                                <option value="4">Freelance</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Tags</label>
+                                            <input type="text" class="form-control" id="exampleInput6" placeholder="e.g. web design, graphics design, video editing" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Salary (Optional)</label>
+                                            <input type="number" class="form-control" id="exampleInput7" placeholder="e.g. $20,000">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Experience</label>
+                                            <input type="text" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlTextarea1">Job Description</label>
+                                            <textarea style="height: 300px;" class="form-control description-area" id="exampleFormControlTextarea1" rows="6" maxlength="5000" placeholder="Job Description" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="exampleFormControlTextarea1">Job Requirements</label>
+                                            <textarea style="height: 300px;" class="form-control description-area" id="exampleFormControlTextarea1" rows="6" maxlength="5000" placeholder="Job Requirements" required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <button type="submit" class="post-btn account-btn ">
+                                            Post A Job
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Account Area End -->
+
+        <!-- Subscribe Section Start -->
+        <section class="subscribe-section">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <div class="section-title">
+                            <h2>Get New Job Notifications</h2>
+                            <p>Subscribe & get all related jobs notification</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <form class="newsletter-form" data-toggle="validator">
+                            <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
+
+                            <button class="default-btn sub-btn" type="submit">
+                                Subscribe
+                            </button>
+
+                            <div id="validator-newsletter" class="form-result"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Subscribe Section End -->
+        {% include './components/footer.html' %}
+        {% endblock content %}

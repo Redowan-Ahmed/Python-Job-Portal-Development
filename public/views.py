@@ -1,17 +1,16 @@
-from unicodedata import category
 from django.core.paginator import Paginator
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from .models import SupportContact, BlogPost, Category, Comment
 from django.contrib import messages
 from .forms import SupportContactForm
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate , login, logout
-from accounts.models import User
+from accounts.models import User, CandidateProfile
 from hr.models import JobCategory, JobPost, Company
 from datetime import date
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from candidates.models import FavoriteJob
 
 
 currentDate = date.today()
@@ -30,44 +29,6 @@ def index(request):
     }
     return render(request, 'index.html', context= context)
 
-
-def SignUp(request):
-    return render(request, 'sign-up.html')
-
-
-def SignIn(request):
-    if request.user.is_authenticated:
-        return redirect('account')
-    else:
-        if request.method == 'POST':
-            email = request.POST['email']
-            password = request.POST['password']
-            check_user_exist = User.objects.filter(email = email).exists()
-            if check_user_exist:
-                user = authenticate(request= request, email = email, password = password)
-                if user:
-                    login(request = request, user= user)
-                    messages.info(request, "You are now logged in")
-                    return redirect('account')
-                else:
-                    messages.error(request, "Invalid Email or Password")
-            else:
-                messages.error(request,'Account does not exist! Please sign up first.')
-        return render(request, 'sign-in.html')
-
-def SignOut(request):
-    if request.user.is_authenticated:
-        logout(request)
-        messages.info(request, message="you're logged out")
-        return redirect('signIn')
-    else:
-        messages.warning(request, message="Please login")
-        return redirect('signIn')
-
-@login_required
-def Account(request):
-    #print(request.user.hr_profile)
-    return render(request, 'account.html')
 
 
 def AboutUs(request):
@@ -130,6 +91,7 @@ def Jobs(request):
             jobs = JobPost.objects.filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
             paginator = Paginator(jobs, 8)
             page_number = request.GET.get('page')
+            loved_jobs = request.user.loved_jobs.all()
             try:
                 page_obj = paginator.get_page(page_number)
                 context = {
@@ -139,6 +101,7 @@ def Jobs(request):
                     'keyword': keyword,
                     'location': location,
                     'query': True,
+                    'loved_jobs': loved_jobs
                 }
                 return render(request, 'job-grid.html', context= context)
             except Exception as e:
@@ -148,14 +111,18 @@ def Jobs(request):
             print(e)
             return render(request, 'job-grid.html')
     else:
-        jobs = JobPost.objects.all().order_by('-created_at')
+        jobs = JobPost.objects.all().order_by('-last_date_of_apply','-created_at')
         paginator = Paginator(jobs, 8)
         page_number = request.GET.get("page")
+        loved_jobs = request.user.loved_jobs.all()
+
         try:
             page_obj = paginator.get_page(page_number)
             context = {
                 'jobs': page_obj.object_list,
-                "page_obj": page_obj
+                "page_obj": page_obj,
+                'today': currentDate,
+                'loved_jobs': loved_jobs
             }
             return render(request, 'job-grid.html', context=context)
         except Exception as e:
@@ -172,7 +139,8 @@ def JobDetails(request, pk):
         context = {
             'job': job,
             'related_jobs': related_jobs,
-            'keywords':job_keyword
+            'keywords':job_keyword,
+            'today': currentDate,
         }
         return render(request, 'job-details.html', context)
     except Exception as e:
@@ -226,3 +194,24 @@ def BlogDetails(request, slug):
     except Exception as e:
         print(e)
         raise Http404("Something Went Wrong")
+
+@login_required
+def ApplyJob(request, pk):
+    job = get_object_or_404(JobPost, pk=pk)
+    print('Got THe object=', job)
+
+    return redirect('job', pk)
+
+@login_required
+def JobFavorite(request, pk):
+    if request.POST:
+
+        candidate = CandidateProfile.objects.filter(user = request.user)
+        if candidate.exists():
+            created, loved = FavoriteJob.objects.get_or_create(user= request.user, job_id= pk)
+            #print('created', created , ' ', 'loved', loved)
+            if not loved:
+                created.delete()
+        return redirect('jobs')
+    else:
+        return redirect('jobs')

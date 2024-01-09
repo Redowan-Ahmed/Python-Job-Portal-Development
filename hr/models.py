@@ -58,6 +58,7 @@ class Company(BaseModel):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='companies', db_index=True)
     STATUS_CHOICES = (('active', 'Active'), ('inactive', 'Inactive'))
+
     EMPLOY_CHOICES = (('0 - 10', '0 - 10'), ('10 - 50', '10 - 50'),
                       ('50 - 100', '50 - 100'), ('100 - 200', '100 - 200'), ('200+', '200+'))
     company_name = models.CharField(max_length=150, unique=True, db_index=True)

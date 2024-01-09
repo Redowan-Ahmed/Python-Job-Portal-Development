@@ -1,0 +1,70 @@
+<div class="col-md-4">
+    <div class="account-information">
+        <div class="profile-thumb">
+
+            {% if request.user.profile_picture %}
+                <img class="object-fit" width="150px" height="150px" src="{{request.user.profile_picture.url}}" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}"  alt="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %} Account image {% endif %}">
+            {% else %}
+                <img width="150px" height="150px" src="/static/assets/img/account.jpg" title="{% if request.user.get_full_name %} {{request.user.get_full_name}}  {% else %}Add Profile image {% endif %}" alt="account holder image">
+            {% endif %}
+
+            {% if request.user.get_full_name %}
+                <h3>{{ request.user.get_full_name }}</h3>
+            {% else %}
+                <h3>{{ request.user.email }}</h3>
+            {% endif %}
+            <p>Web Developer</p>
+        </div>
+
+        <ul>
+            <li>
+                <a href="#" class="active">
+                    <i class='bx bx-user'></i>
+                    My Profile
+                </a>
+            </li>
+            <li>
+                <a href="resume.html">
+                    <i class='bx bxs-file-doc'></i>
+                    My Resume
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-briefcase'></i>
+                    Applied Job
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-envelope'></i>
+                    Messages
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-heart'></i>
+                    Saved Jobs
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-lock-alt' ></i>
+                    Change Password
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <i class='bx bx-coffee-togo'></i>
+                    Delete Account
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'logout' %}">
+                    <i class='bx bx-log-out'></i>
+                    Log Out
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -76,12 +76,27 @@
 										<div class="col-lg-3">
 											<div class="job-save">
 												<span>{{job.job_type}}</span>
-												<a href="#">
-													<i class='bx bx-heart'></i>
-												</a>
-												<p>
-													<i class='bx bx-stopwatch' ></i>
-													{{job.created_at.date}}
+													<form action="{% url 'loved_job' job.pk %}" method="post">
+														{% csrf_token %}
+														<button type="submit">
+															<a href="#">
+																<i class='bx bx-heart'></i>
+															</a>
+														</button>
+													</form>
+													{% if job.last_date_of_apply <= today %}
+													<p class="text-danger">
+													<i class='bx bx-stopwatch '>
+													</i>
+														Expired
+													</p>
+													{% else %}
+													<p>
+														<i class='bx bx-stopwatch '>
+														</i>
+														{{job.last_date_of_apply}}
+													</p>
+													{% endif %}
 												</p>
 											</div>
 										</div>
