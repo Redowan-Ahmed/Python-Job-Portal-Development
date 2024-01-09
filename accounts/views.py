@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import User
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
@@ -56,9 +57,27 @@ def Account(request):
 
 @login_required(login_url='signIn')
 def PostJob(request):
-    categories = JobCategory.objects.all()
-    print(request.POST.get('category'))
-    context = {
-        'categories': categories
-    }
-    return render(request,'account-post-job.html', context= context)
+    if request.user.is_hr:
+        categories = JobCategory.objects.all()
+        if request.method == 'POST':
+            category = request.POST.get('category')
+            description = request.POST.get('description')
+            requirements = request.POST.get('requirements')
+            keywords = request.POST.get('keywords')
+            salary = request.POST.get('salary')
+            job_type = request.POST.get('job_type')
+            address = request.POST.get('address')
+            salary = request.POST.get('salary')
+            salary = request.POST.get('salary')
+            salary = request.POST.get('salary')
+            thumbnail = request.FILES.get('thumbnail')
+            try:
+                category_obj = get_object_or_404(JobCategory, id = category)
+                print(category_obj)
+            except Exception as e:
+                print("Error occured while posting job",e)
+        context = {
+            'categories': categories
+        }
+        return render(request,'account-post-job.html', context= context)
+    return redirect('account')

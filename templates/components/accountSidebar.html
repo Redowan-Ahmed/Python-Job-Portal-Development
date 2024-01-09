@@ -15,10 +15,25 @@
             {% endif %}
             <p>Web Developer</p>
         </div>
-
         <ul>
             <li>
-                <a href="#" class="active">
+                <a href="{% url 'account' %}" class="{% if request.META.PATH_INFO == '/dashboard/' %} active {% endif %}">
+                    <i class='bx bx-bar-chart-square'></i>
+                    Dashboard
+                </a>
+            </li>
+
+            {% if request.user.is_hr %}
+                <li>
+                    <a href="{% url 'post-job' %}" class="{% if request.META.PATH_INFO == '/dashboard/post-job/' %} active {% endif %}">
+                        <i class='bx bx-user'></i>
+                        Post Job
+                    </a>
+                </li>
+            {% endif %}
+
+            <li>
+                <a href="#" class="">
                     <i class='bx bx-user'></i>
                     My Profile
                 </a>

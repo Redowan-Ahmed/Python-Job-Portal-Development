@@ -14,7 +14,7 @@
                     <div class="col-md-8">
                         <div class="account-details">
                         <h3>Fill the form to post a job</h3>
-                            <form class="needs-validation" method="post">
+                            <form class="needs-validation" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="col-md-6">
@@ -52,26 +52,26 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Company Website (Optional)</label>
-                                            <input type="text" class="form-control" id="exampleInput4" placeholder="e.g www.companyname.com">
+                                            <input name="" type="text" class="form-control" id="exampleInput4" placeholder="e.g www.companyname.com">
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Location</label>
-                                            <input type="text" class="form-control" id="exampleInput5" placeholder="e.g. London" required>
+                                            <input name="address" type="text" class="form-control" id="exampleInput5" placeholder="e.g. London" required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Job Type</label>
-                                            <select class="form-select form-control" title="type">
-                                                <option selected >Job Type</option>
-                                                <option value="1">Full Time</option>
-                                                <option value="2">Part Time</option>
-                                                <option value="4">Project Based</option>
-                                                <option value="4">Freelance</option>
+                                            <select name="job_type" class="form-select form-control" title="type">
+                                                <option selected disabled hidden>Job Type</option>
+                                                <option value="Full Time">Full Time</option>
+                                                <option value="Part Time">Part Time</option>
+                                                <option value="Project Based">Project Based</option>
+                                                <option value="Freelance">Freelance</option>
                                             </select>
                                         </div>
                                     </div>
@@ -79,14 +79,14 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Job Tags</label>
-                                            <input type="text" class="form-control" id="exampleInput6" placeholder="e.g. web design, graphics design, video editing" required>
+                                            <input name="keywords" type="text" class="form-control" id="exampleInput6" placeholder="e.g. web design, graphics design, video editing" required>
                                         </div>
                                     </div>
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label>Salary (Optional)</label>
-                                            <input type="number" class="form-control" id="exampleInput7" placeholder="e.g. $20,000">
+                                            <label>Salary</label>
+                                            <input name="salary" type="number" class="form-control" id="exampleInput7" placeholder="e.g. $20,000">
                                         </div>
                                     </div>
 
@@ -99,14 +99,20 @@
 
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Job Description</label>
-                                            <textarea style="height: 300px;" class="form-control description-area" id="exampleFormControlTextarea1" rows="6" maxlength="5000" placeholder="Job Description" required></textarea>
+                                            <label for="formFileLg" class="form-label">Thumbnail Image</label>
+                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="thumbnail" accept="image/*" >
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="exampleFormControlTextarea1">Job Requirements</label>
-                                            <textarea style="height: 300px;" class="form-control description-area" id="exampleFormControlTextarea1" rows="6" maxlength="5000" placeholder="Job Requirements" required></textarea>
+                                            <label for="description_editor">Job Description</label>
+                                            <textarea style="height: 300px;" class="form-control description-area" id="description_editor" name="description" rows="6" maxlength="5000" placeholder="Job Description" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="job_requirment">Job Requirements</label>
+                                            <textarea name="requirements" style="height: 300px;" class="form-control description-area" id="job_requirment" rows="6" maxlength="5000" placeholder="Job Requirements" required></textarea>
                                         </div>
                                     </div>
 
@@ -151,4 +157,11 @@
         </section>
         <!-- Subscribe Section End -->
         {% include './components/footer.html' %}
+
+        <script>
+            var editor1cfg = {}
+            editor1cfg.toolbar = "basic";
+            var editor1 = new RichTextEditor("#description_editor", editor1cfg);
+            var editor2 = new RichTextEditor("#job_requirment", editor1cfg);
+        </script>
         {% endblock content %}
