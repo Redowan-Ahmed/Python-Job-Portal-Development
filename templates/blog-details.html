@@ -79,7 +79,6 @@
                             <div id="comments">
                         {% with comments=blog.comments.all %}
                         {% if comments %}
-                        
                             <h3 class="my-4">Comments</h3>
                             {% for comment in comments %}
 
@@ -94,7 +93,6 @@
                                             {% else %}
                                             <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
                                             {% endif %}
-                                                
 
                                             <span class="text-black"><b>{{comment.user.get_full_name}}</b></span>
                                         </div>

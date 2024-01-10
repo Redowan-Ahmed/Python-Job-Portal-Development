@@ -64,7 +64,7 @@ def Contact(request):
 def CategorizedJobs(request, category):
     try:
         category = JobCategory.objects.get(name = category)
-        jobs = JobPost.objects.filter(job_category = category, last_date_of_apply__gte = currentDate).order_by("-created_at")
+        jobs = JobPost.objects.filter(job_category = category).order_by("-created_at")
         paginator = Paginator(jobs, 8)
         page_number = request.GET.get("page")
         try:
@@ -91,7 +91,10 @@ def Jobs(request):
             jobs = JobPost.objects.filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
             paginator = Paginator(jobs, 8)
             page_number = request.GET.get('page')
-            loved_jobs = request.user.loved_jobs.all()
+            if request.user.is_authenticated:
+                loved_jobs = request.user.loved_jobs.all()
+            else:
+                loved_jobs = None
             try:
                 page_obj = paginator.get_page(page_number)
                 context = {
@@ -114,7 +117,10 @@ def Jobs(request):
         jobs = JobPost.objects.all().order_by('-last_date_of_apply','-created_at')
         paginator = Paginator(jobs, 8)
         page_number = request.GET.get("page")
-        loved_jobs = request.user.loved_jobs.all()
+        if request.user.is_authenticated:
+            loved_jobs = request.user.loved_jobs.all()
+        else:
+            loved_jobs = None
 
         try:
             page_obj = paginator.get_page(page_number)

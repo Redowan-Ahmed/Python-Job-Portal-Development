@@ -52,7 +52,7 @@
                                     </ul>
                                 </div>
                             </div>
-        
+
                             <div class="col-md-4 col-sm-6">
                                 <div class="contact-card">
                                     <i class='bx bx-mail-send' ></i>
@@ -97,21 +97,13 @@
             <div class="container">
                 <div class="contact-area">
                     <h3>Lets' Talk With Us</h3>
-                    {% if messages %}
-                    <ul class="messages">
-                        {% for message in messages %}
-                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-
                     <form id="contactForm" method="post" action="{% url 'contact' %}">
                         {% csrf_token %}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="text" name="full_name" id="name" class="form-control" required data-error="Please enter your name" placeholder="Your Name">
-                                     {% if form.full_name.errors %}
+                                    {% if form.full_name.errors %}
                                         <div class="help-block with-errors text-danger">{{form.full_name.errors}}</div>
                                     {% endif %}
                                 </div>
@@ -119,12 +111,12 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="email" name="email" id="email" class="form-control" required data-error="Please enter your email" placeholder="Your Email">
-                                     {% if form.email.errors %}
+                                    {% if form.email.errors %}
                                         <div class="help-block with-errors text-danger">{{form.email.errors}}</div>
                                     {% endif %}
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="tel" name="phone_number" id="number" class="form-control" required data-error="Please enter your number" placeholder="Phone Number">
@@ -133,25 +125,25 @@
                                     {% endif %}
                                 </div>
                             </div>
-        
+
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <input type="text" name="subject" id="subject" class="form-control" required data-error="Please enter your subject" placeholder="Your Subject">
-                                     {% if form.subject.errors %}
+                                    {% if form.subject.errors %}
                                         <div class="help-block with-errors text-danger">{{form.subject.errors}}</div>
                                     {% endif %}
                                 </div>
                             </div>
-                        
+
                             <div class="col-lg-12 col-md-12">
                                 <div class="form-group">
                                     <textarea name="message" class="form-control message-field" id="message" cols="30" rows="7" required data-error="Please type your message" placeholder="Write Message"></textarea>
-                                     {% if form.message.errors %}
+                                    {% if form.message.errors %}
                                         <div class="help-block with-errors text-danger">{{form.message.errors}}</div>
                                     {% endif %}
                                 </div>
                             </div>
-                        
+
                             <div class="col-lg-12 col-md-12 text-center">
                                 <button type="submit" class="default-btn contact-btn">
                                     Send Message
@@ -180,11 +172,11 @@
                     <div class="col-md-6">
                         <form class="newsletter-form" data-toggle="validator">
                             <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
-    
+
                             <button class="default-btn sub-btn" type="submit">
                                 Subscribe
                             </button>
-    
+
                             <div id="validator-newsletter" class="form-result"></div>
                         </form>
                     </div>

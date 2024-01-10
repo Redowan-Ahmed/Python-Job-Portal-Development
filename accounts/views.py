@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from .models import User
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from candidates.models import FavoriteJob
 
 # Create your views here.
 
@@ -92,9 +93,11 @@ def PostJob(request):
 
                 if title and category and description and requirements and keywords and salary and job_type and address and looking_position and experience and country and thumbnail and last_date_of_apply:
                     post = JobPost.objects.create(user= request.user, job_category =category_obj, company=company_obj, thumbnail= thumbnail, title= title, description= description, requirements=requirements, minimum_experience= experience, job_type= job_type, looking_position= looking_position, address=address, country= country, salary = salary, keywords=keywords, last_date_of_apply= last_date_of_apply)
+                    messages.success(request, "You're successfully posted a new job")
                     return redirect('job', post.pk)
                 else:
                     print(title, category , description , requirements , keywords , salary , job_type , address , looking_position , experience , country , thumbnail , last_date_of_apply)
+                    messages.error(request, 'Something is wrong, Please fill the form properly')
                     raise ValueError('Got unexpected condition')
             except Exception as e:
                 print("Error occurred while posting job",e)
@@ -113,3 +116,19 @@ def ViewJobPosts(request):
         'today': currentDate
     }
     return render(request, 'account-jobs.html', context= context)
+
+@login_required
+def Companies(request):
+
+    return render(request, 'account-company.html')
+
+@login_required
+def CompanyPost(request):
+
+    return render(request, 'account-company.html')
+
+@login_required
+def savedJobs(request):
+    jobs = request.user.loved_jobs.all().order_by('-created_at')
+    print(jobs)
+    return render(request, 'account-company.html')

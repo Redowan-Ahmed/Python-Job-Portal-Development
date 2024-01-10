@@ -36,6 +36,21 @@
                         Post Job
                     </a>
                 </li>
+                <li>
+                    <a href="{% url 'dash-companies' %}" class="{% if request.META.PATH_INFO == '/dashboard/company/' %} active {% endif %}">
+                        <i class='bx bx-pen'></i>
+                        Company
+                    </a>
+
+                <ul>
+                    <li>
+                        <a href="{% url 'add-company' %}" class="{% if request.META.PATH_INFO == '/dashboard/company/add-company/' %} active {% endif %}">
+                            <i class='bx bx-pen'></i>
+                            Add Company
+                        </a>
+                    </li>
+                </ul>
+                </li>
             {% endif %}
 
             <li>
