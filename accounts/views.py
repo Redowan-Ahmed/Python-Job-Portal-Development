@@ -132,3 +132,8 @@ def savedJobs(request):
     jobs = request.user.loved_jobs.all().order_by('-created_at')
     print(jobs)
     return render(request, 'account-company.html')
+
+
+@login_required
+def AccountChat(request):
+    return render(request, 'account-Chat.html')

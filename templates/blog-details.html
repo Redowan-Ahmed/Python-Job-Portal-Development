@@ -88,13 +88,17 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="pb-3">
-                                            {% if comment.user.profile_picture %}
-                                            <span class="me-3"><img width="50" height="50" src="{{comment.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
-                                            {% else %}
-                                            <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
-                                            {% endif %}
-
-                                            <span class="text-black"><b>{{comment.user.get_full_name}}</b></span>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                {% if comment.user.profile_picture %}
+                                                <span class="me-3"><img width="50" height="50" src="{{comment.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                                {% else %}
+                                                <span class="me-3"><img width="50" height="50" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-primary"></span>
+                                                {% endif %}
+                                                <span class="text-black"><b>{{comment.user.get_full_name}}</b></span>
+                                            </div>
+                                                <small class="text-black-100" title="{{comment.user.get_full_name}} commented">{{comment.created_at.date}}</small>
+                                            </div>
                                         </div>
                                         <p class="mb-0">{{comment.comment}}</p>
                                     </div>
@@ -107,15 +111,19 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="pb-2">
-                                            {% if reply.user.profile_picture %}
-                                            <span class="me-2"><img width="30" height="30" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
-                                            {% else %}
-                                            <span class="me-2"><img width="30" height="30" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
-                                            {% endif %}
-
-                                            <span class="text-black"><b>{{reply.user.get_full_name}}</b></span>
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    {% if reply.user.profile_picture %}
+                                                    <span class="me-2"><img width="30" height="30" src="{{reply.user.profile_picture.url}}" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
+                                                    {% else %}
+                                                    <span class="me-2"><img width="30" height="30" src="/static/assets/img/account.jpg" alt="" class="object-fit rounded-circle border border-2 border-success"></span>
+                                                    {% endif %}
+                                                    <span class="text-black"><b>{{reply.user.get_full_name}}</b></span>
+                                                </div>
+                                            <small class="text-black-100" title="{{reply.user.get_full_name}} replied">{{reply.created_at.date}}</small>
                                         </div>
-                                        <p class="mb-0">Replied: {{reply.comment}}</p>
+                                        </div>
+                                        <p class="mb-0 fs-6">Replied: {{reply.comment}}</p>
                                     </div>
                                 </div>
                             </div>

@@ -4871,5 +4871,13 @@ h3 {
   }
 }
 
+.object-fit{
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+
 /* Animation CSS End */
 /*# sourceMappingURL=style.css.map */
+
+

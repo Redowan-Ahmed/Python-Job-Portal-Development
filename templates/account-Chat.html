@@ -1,0 +1,280 @@
+{% extends './components/Base.html' %}
+
+{% block meta %}
+	<title>Account</title>
+    <style>
+        div::-webkit-scrollbar {
+            width: 0.35rem;
+          }
+
+        /**div::-webkit-scrollbar-track {
+        }**/
+
+        div::-webkit-scrollbar-thumb {
+            background-color: rgb(221, 221, 221);
+            border-radius: 50px;
+        }
+        #chatUser{
+            border-bottom: 1px solid #dfdfdf;
+        }
+        #chatUser:hover{
+            background: #f6f6f6
+        }
+        .mactivate{
+            background: #f6f6f6
+        }
+        .chatbox{
+            padding: 20px;
+        }
+        .senderMessage{
+            text-align: left;
+        }
+        .receiverMessage{
+            text-align: right;
+        }
+        #chatSide{
+            overflow-y: scroll;
+        }
+
+        .senderMessage div{
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: rgba(246, 249, 255, 0.361);
+            border-radius: 10px 10px 10px 0px;
+            box-shadow: -2px 2px 11px 0px #e7e7e7;
+            margin: 10px 0px;
+            max-width: 80%;
+        }
+
+        .receiverMessage div{
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: rgba(176, 201, 255, 0.361);
+            border-radius: 10px 10px 0px 10px;
+            box-shadow: -2px 2px 11px 0px #e7e7e7;
+            margin: 10px 0px;
+            max-width: 80%;
+        }
+        .senderMessage > div > span, .receiverMessage > div > span{
+            color: #000;
+        }
+        .senderMessage > div > small, .receiverMessage > div > small{
+            font-size: smaller;
+        }
+        #sendMessageForm textarea{
+            max-height: 100px;
+        }
+        .chatForm{
+            border-top: 1px solid #e1e1e1;
+            background-color: #fff;
+        }
+        #headChat{
+            border-bottom: 1px solid #e1e1e1;
+        }
+    </style>
+{% endblock meta %}
+
+{% block content %}
+
+{% include './components/header.html' %}
+        <section class="account-section ptb-100">
+            <div class="container">
+                <div class="row">
+                {% include "./components/accountSidebar.html" %}
+                    <div class="col-md-8">
+                        <!-- <h3>Fill the form to post a job</h3> -->
+                        <div style="height: 90vh;" class="row shadow rounded-3 ">
+                            <div style="border-right: 1px solid #dfdfdf; overflow-y: scroll;" class="col-md-4 h-100 p-0">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="#" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/' %} mactivate {% endif %}">
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="http://127.0.0.1:8000/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                            <span>Dashboard</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div id="chatSide" class="col-md-8 h-100 p-0 position-relative">
+                                <div class="position-sticky top-0 w-100 bg-white">
+                                    <div id="headChat" class="d-flex d-flex align-items-center justify-content-between px-3 py-3 fw-bold">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="http://127.0.0.1:8000/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                            <div>
+                                                <span>Dashboard</span>
+                                            </div>
+                                        </div>
+                                        <div class="block">
+                                            <button class="btn btn-danger">Block</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chatbox">
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> I'm goood and You ??aw dawd awd awd awd awd awd awd awd awd </span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="senderMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                    <div class="receiverMessage">
+                                        <div>
+                                            <span> Hi, Redowan. How are you?</span>
+                                            <br/>
+                                            <small>10/10/2024</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chatForm position-sticky bottom-0 w-100">
+                                    <form id="sendMessageForm" class="d-flex p-3 gap-3">
+                                        <input class="form-control w-75" type="text" name="message" placeholder="Type your message..." required> </input>
+                                        <input class="btn btn-primary w-25 h-auto" type="submit" placeholder="Submit"/>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Account Area End -->
+
+        {% include './components/footer.html' %}
+        {% endblock content %}

@@ -13,7 +13,7 @@ from django.db.models import Q
 from candidates.models import FavoriteJob
 
 
-currentDate = date.today()
+currentDate: date = date.today()
 
 def index(request):
     categories = JobCategory.objects.filter(featured = True)[:8]
@@ -27,7 +27,7 @@ def index(request):
         'companies': companies,
         'posts': posts
     }
-    return render(request, 'index.html', context= context)
+    return render(request=request, template_name='index.html', context= context)
 
 
 
@@ -36,30 +36,30 @@ def AboutUs(request):
     context= {
         'blogs': blogs
     }
-    return render(request, 'about.html', context)
+    return render(request=request, template_name='about.html', context=context)
 
 
 def Contact(request):
     if request.method == 'POST':
-        form = SupportContactForm(request.POST)
+        form = SupportContactForm(data=request.POST)
         context = {
             'errors': form.errors,
             'form': form
         }
         if form.is_valid():
-            name = form.cleaned_data.get('full_name')
-            email = form.cleaned_data.get('email')
-            number = form.cleaned_data.get('phone_number')
-            subject = form.cleaned_data.get('subject')
-            message = form.cleaned_data.get('message')
+            name: str | None = form.cleaned_data.get('full_name')
+            email: str | None = form.cleaned_data.get('email')
+            number: str | None = form.cleaned_data.get('phone_number')
+            subject: str | None = form.cleaned_data.get('subject')
+            message: str | None = form.cleaned_data.get('message')
             SupportContact.objects.create(
                 full_name=name, email=email, phone_number=number, subject=subject, message=message)
             messages.success(
-                request, "Thank your for your Submission, We'll rechout with you soon")
-            return render(request, 'contact.html', context=context)
-        return render(request, 'contact.html', context=context)
+                request=request, message="Thank your for your Submission, We'll rechout with you soon")
+            return render(request=request, template_name='contact.html', context=context)
+        return render(request=request, template_name='contact.html', context=context)
     else:
-        return render(request, 'contact.html')
+        return render(request=request, template_name='contact.html')
 
 def CategorizedJobs(request, category):
     try:
@@ -74,12 +74,12 @@ def CategorizedJobs(request, category):
                 'jobs': page_obj.object_list,
                 "page_obj": page_obj
             }
-            return render(request, 'categorized-jobs.html', context)
+            return render(request=request, template_name='categorized-jobs.html', context=context)
         except Exception as e:
             print(e)
             raise Http404('No more page Exit')
     except Exception as e:
-        print("Error in categorized jobs", str(e))
+        print("Error in categorized jobs", str(object=e))
         raise Http404('page is not found')
 
 
@@ -88,9 +88,9 @@ def Jobs(request):
         try:
             keyword = request.GET.get('keyword')
             location = request.GET.get('location')
-            jobs = JobPost.objects.filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
-            paginator = Paginator(jobs, 8)
-            page_number = request.GET.get('page')
+            jobs = JobPost.objects.select_related('job_category','user', 'company').filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
+            paginator = Paginator(object_list=jobs, per_page=8)
+            page_number: str = request.GET.get('page')
             if request.user.is_authenticated:
                 loved_jobs = request.user.loved_jobs.all()
             else:
@@ -106,15 +106,15 @@ def Jobs(request):
                     'query': True,
                     'loved_jobs': loved_jobs
                 }
-                return render(request, 'job-grid.html', context= context)
+                return render(request=request, template_name='job-grid.html', context= context)
             except Exception as e:
                 print(e)
                 raise Http404('NO page is available')
         except Exception as e:
             print(e)
-            return render(request, 'job-grid.html')
+            return render(request=request, template_name='job-grid.html')
     else:
-        jobs = JobPost.objects.all().order_by('-last_date_of_apply','-created_at')
+        jobs = JobPost.objects.select_related('job_category','user', 'company').all().order_by('-last_date_of_apply','-created_at')
         paginator = Paginator(jobs, 8)
         page_number = request.GET.get("page")
         if request.user.is_authenticated:
@@ -130,7 +130,7 @@ def Jobs(request):
                 'today': currentDate,
                 'loved_jobs': loved_jobs
             }
-            return render(request, 'job-grid.html', context=context)
+            return render(request=request, template_name='job-grid.html', context=context)
         except Exception as e:
             print(e)
             raise Http404('No more page Exit')
@@ -139,16 +139,17 @@ def Jobs(request):
 
 def JobDetails(request, pk):
     try:
-        job = get_object_or_404(JobPost, pk=pk)
-        related_jobs = JobPost.objects.filter(job_category__name = job.job_category.name, last_date_of_apply__gte = currentDate).exclude(pk=job.pk).order_by('-created_at')[:5]
-        job_keyword = job.keywords.split(',')
+        job = get_object_or_404(JobPost.objects.select_related('job_category','user', 'company'), pk=pk)
+        related_jobs = JobPost.objects.select_related('job_category','user', 'company').filter(job_category__name = job.job_category.name, last_date_of_apply__gte = currentDate).exclude(pk=job.pk).order_by('-created_at')[:5]
+        job_keyword: list[str] = job.keywords.split(sep=',')
         context = {
             'job': job,
             'related_jobs': related_jobs,
             'keywords':job_keyword,
             'today': currentDate,
+            'user': request.user
         }
-        return render(request, 'job-details.html', context)
+        return render(request=request, template_name='job-details.html', context=context)
     except Exception as e:
         print(e)
         raise Http404("Page not found")
@@ -157,7 +158,7 @@ def JobDetails(request, pk):
 def Blogs(request):
     try:
         blogs = BlogPost.objects.select_related('author','category').filter(status='Published').order_by('-created_at')
-        paginator = Paginator(blogs, 6)
+        paginator = Paginator(object_list=blogs, per_page=6)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         context = {
@@ -172,12 +173,12 @@ def Blogs(request):
 
 def BlogDetails(request, slug):
     try:
-        blog = get_object_or_404(BlogPost, slug=slug)
+        blog = get_object_or_404(BlogPost.objects.select_related('author','category'), slug=slug)
         if request.method == 'POST':
             if request.user.is_authenticated:
                 comment = request.POST.get('comment')
                 commenter = request.user
-                if not 'sex' in str(comment).lower():
+                if not 'sex' in str(object=comment).lower():
                     Comment.objects.create(comment = comment, user = commenter, post = blog)
                 return redirect('blog', slug)
             else:
@@ -193,7 +194,7 @@ def BlogDetails(request, slug):
                     'tags': tags.split(','),
                     'related_posts': related_posts
                 }
-                return render(request, 'blog-details.html', context= context)
+                return render(request=request, template_name='blog-details.html', context= context)
             except Exception as e:
                 print(e)
                 raise Http404("Page not found")

@@ -1,5 +1,5 @@
 from django.urls import include, path
-from .views import PostJob, Account, ViewJobPosts, CompanyPost, Companies, savedJobs
+from .views import PostJob, Account, ViewJobPosts, CompanyPost, Companies, savedJobs, AccountChat
 
 urlpatterns = [
     path('', Account , name='account'),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('company/', Companies , name='dash-companies'),
     path('jobs/', ViewJobPosts , name='posted-jobs'),
     path('saved-jobs/', savedJobs , name='loved-jobs'),
+    path('messages/', AccountChat, name="messages"),
 ]

@@ -25,12 +25,14 @@ SECRET_KEY = 'django-insecure-t#)chryrh9t6l4v&t#zcs4zn^-8=064g%jo-4woto-$^+22p#0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    #'daphne',
+    'channels',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -251,5 +253,15 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'full',
+    },
+}
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
 }

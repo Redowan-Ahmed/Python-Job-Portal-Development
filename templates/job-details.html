@@ -2,9 +2,7 @@
 
 
 {% block meta %}
-<title>
-    {{job.title}}
-</title>
+        <title>{{job.title}}</title>
 {% endblock meta %}
 
 {% block content %}
@@ -75,13 +73,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="details-text">
+                                    <div class="details-text text-black">
                                         <h3>Description</h3>
                                         {% autoescape off %}
                                             {{job.description}}
                                         {% endautoescape %}
                                     </div>
-                                    <div class="details-text">
+                                    <div class="details-text text-black ">
                                         <h3>Requirements</h3>
                                 <p class="text-black" >
                                     {% autoescape off %}
@@ -139,7 +137,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {% if request.user == job.user %}
+                                    {% if user == job.user %}
                                         <div class="theme-btn rounded-2 text-center">
                                             <a href="#" class="default-btn rounded-2 w-100">
                                                 Edit
@@ -148,13 +146,19 @@
                                     {% else %}
                                         <div class="theme-btn text-center ">
                                         {% if job.last_date_of_apply >= today %}
-                                            <a type="button" class="default-btn rounded-2 w-100" data-toggle="modal" data-target="#applyModel">Apply Now</a>
 
-                                            {% if not request.user.is_authenticated %}
+                                            {% if user.is_authenticated %}
+                                                <a type="button" class="default-btn rounded-2 w-100" data-toggle="modal" data-target="#applyModel">Apply Now</a>
+                                                {% else %}
+                                                <a type="button" class="default-btn rounded-2 w-100 disabled" disabled='true'>Login To Apply Now</a>
+                                            {% endif %}
+
+
+                                            {% if not user.is_authenticated %}
                                                 <p class="text-center">To apply you must have to <a href="{% url 'signIn' %}">login</a> to your account or <a href="{% url 'signUp' %}">create an account</a> </p>
                                                 {% endif %}
                                             {% else %}
-                                                <a class="default-btn rounded-2 w-100" >Apply date is end</a>
+                                                <a class="btn btn-secondary disabled rounded-2 w-100" disabled >Apply date is end</a>
                                             {% endif %}
                                         </div>
                                     {% endif %}
@@ -233,7 +237,7 @@
         <!-- Job Details Section End -->
 
 {% if related_jobs %}
-        <!-- Job Section End -->   
+        <!-- Job Section End -->
         <section class="job-style-two pt-100 pb-70">
             <div class="container">
                 <div class="section-title text-center">
@@ -317,15 +321,14 @@
                             <label for="message-text" class="col-form-label">Message:</label>
                             <textarea class="form-control" id="message-text"></textarea>
                         </div>
-
-                <div class="modal-footer justify-content-center">
-                    <button type="submit" class="btn btn-danger">Apply</button>
-                </div>
-            </form>
+                    <div class="modal-footer justify-content-center">
+                        <button type="submit" class="btn btn-danger">Apply</button>
+                    </div>
+                </form>
+            </div>
         </div>
-                </div>
-            </div>
-            </div>
+    </div>
+</div>
 
 
 
@@ -357,4 +360,20 @@
         </section>
         <!-- Subscribe Section End -->
         {% include './components/footer.html' %}
+        <!-- <script>
+            const jobId = '{{job.id}}'
+            let webScoketurl = new WebSocket(`ws://localhost:8000/ws/job-detail/${jobId}`)
+            webScoketurl.onopen = (e)=>{
+                console.log('just opened',e)
+            }
+            webScoketurl.onclose = (e)=>{
+                console.log('just closed',e)
+            }
+            webScoketurl.onmessage = (e)=>{
+                console.log('just messaged',e)
+            }
+            webScoketurl.onerror = (e)=>{
+                console.log('Error',e)
+            }
+        </script> -->
         {% endblock content %}
