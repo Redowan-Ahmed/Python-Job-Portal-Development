@@ -170,9 +170,28 @@
               <div class="col-lg-3">
                 <div class="job-save">
                   <span> {{job.job_type}}</span>
-                  <a href="#">
-                    <i class="bx bx-heart"></i>
-                  </a>
+                      {% if user.is_authenticated %}
+                      <form action="{% url 'loved_job' job.pk %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">
+                          {% if job in loved_jobs %}
+                            <a title="Marked as favorite">
+                              <i class='bx bx-heart bg-danger text-white'></i>
+                            </a>
+                            {% else %}
+                            <a title="Mark as favorite">
+                              <i class='bx bx-heart'></i>
+                            </a>
+                          {% endif %}
+                        </button>
+                      </form>
+                    {% else %}
+                      <button>
+                        <a href="{% url 'signIn' %}" title="Login First to mark it favorite job">
+                          <i class='bx bx-heart'></i>
+                        </a>
+                      </button>
+                    {% endif %}
                   <p>
                     <i class="bx bx-stopwatch"></i>
                     {{job.created_at.date}}
@@ -189,6 +208,10 @@
       <div class="py-5 text-center">No active job available</div>
 
     {% endif %}
+    </div>
+    <div class="text-center">
+          <a class="btn btn-lg btn-danger" href="{% url 'jobs' %}">View all</a>
+
     </div>
   </div>
 </section>

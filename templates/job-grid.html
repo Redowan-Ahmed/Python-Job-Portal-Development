@@ -76,14 +76,32 @@
 										<div class="col-lg-3">
 											<div class="job-save">
 												<span>{{job.job_type}}</span>
+
+												{% if user.is_authenticated %}
 													<form action="{% url 'loved_job' job.pk %}" method="post">
 														{% csrf_token %}
 														<button type="submit">
-															<a href="#">
-																<i class='bx bx-heart'></i>
-															</a>
+															{% if job in loved_jobs %}
+																<a title="Marked as favorite">
+																	<i class='bx bx-heart bg-danger text-white'></i>
+																</a>
+																{% else %}
+																<a title="Mark as favorite">
+																	<i class='bx bx-heart'></i>
+																</a>
+															{% endif %}
 														</button>
 													</form>
+												{% else %}
+													<button>
+														<a href="{% url 'signIn' %}" title="Login First to mark it favorite job">
+															<i class='bx bx-heart'></i>
+														</a>
+													</button>
+												{% endif %}
+
+
+
 													{% if job.last_date_of_apply <= today %}
 													<p class="text-danger">
 													<i class='bx bx-stopwatch '>

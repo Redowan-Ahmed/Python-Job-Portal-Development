@@ -1,3 +1,4 @@
+from colorama import init
 from django.core.paginator import Paginator
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -20,12 +21,19 @@ def index(request):
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
     companies = Company.objects.select_related('user').prefetch_related('jobs').all()[:4]
     posts = BlogPost.objects.select_related('category','author').prefetch_related('likes').filter(status='Published').order_by('-created_at')[:3]
+    loved_jobs = []
+    user = request.user
+    if user.is_authenticated:
+        favorites = user.loved_jobs.select_related('job').all()
+        for favorite in favorites:
+                loved_jobs.append(favorite.job)
     context = {
         'categories': categories,
         'today': currentDate,
         'jobs': jobs,
         'companies': companies,
-        'posts': posts
+        'posts': posts,
+        'loved_jobs': loved_jobs
     }
     return render(request=request, template_name='index.html', context= context)
 
@@ -93,10 +101,12 @@ def Jobs(request):
             jobs = JobPost.objects.select_related('job_category','user', 'company').filter( q_location & q_keyword).order_by('-created_at')
             paginator = Paginator(object_list=jobs, per_page=8)
             page_number: str = request.GET.get('page')
-            if request.user.is_authenticated:
-                loved_jobs = request.user.loved_jobs.all()
-            else:
-                loved_jobs = None
+            loved_jobs = []
+            user = request.user
+            if user.is_authenticated:
+                favorites = user.loved_jobs.select_related('job').all()
+                for favorite in favorites:
+                    loved_jobs.append(favorite.job)
             try:
                 page_obj = paginator.get_page(page_number)
                 context = {
@@ -106,7 +116,8 @@ def Jobs(request):
                     'keyword': keyword,
                     'location': location,
                     'query': True,
-                    'loved_jobs': loved_jobs
+                    'loved_jobs': loved_jobs,
+                    'user':user
                 }
                 return render(request=request, template_name='job-grid.html', context= context)
             except Exception as e:
@@ -119,18 +130,21 @@ def Jobs(request):
         jobs = JobPost.objects.select_related('job_category','user', 'company').all().order_by('-last_date_of_apply','-created_at')
         paginator = Paginator(jobs, 8)
         page_number = request.GET.get("page")
-        if request.user.is_authenticated:
-            loved_jobs = request.user.loved_jobs.all()
-        else:
-            loved_jobs = None
-
+        loved_jobs = []
+        user = request.user
+        if user.is_authenticated:
+            favorites = user.loved_jobs.select_related('job').all()
+            for favorite in favorites:
+                loved_jobs.append(favorite.job)
         try:
-            page_obj = paginator.get_page(page_number)
+            page_obj = paginator.get_page(number=page_number)
             context = {
                 'jobs': page_obj.object_list,
                 "page_obj": page_obj,
                 'today': currentDate,
-                'loved_jobs': loved_jobs
+                'loved_jobs': loved_jobs,
+                'user':user
+
             }
             return render(request=request, template_name='job-grid.html', context=context)
         except Exception as e:
@@ -220,13 +234,12 @@ def ApplyJob(request, pk):
 @login_required
 def JobFavorite(request, pk):
     if request.POST:
-
         candidate = CandidateProfile.objects.filter(user = request.user)
         if candidate.exists():
-            created, loved = FavoriteJob.objects.get_or_create(user= request.user, job_id= pk)
+            loved, created = FavoriteJob.objects.get_or_create(user= request.user, job_id= pk)
             #print('created', created , ' ', 'loved', loved)
-            if not loved:
-                created.delete()
-        return redirect('jobs')
+            if not created:
+                loved.delete()
+        return redirect(request.META.get('HTTP_REFERER'))
     else:
-        return redirect('jobs')
+        return redirect(request.META.get('HTTP_REFERER'))
