@@ -5,7 +5,7 @@
     <style>
         div::-webkit-scrollbar {
             width: 0.35rem;
-          }
+        }
 
         /**div::-webkit-scrollbar-track {
         }**/
@@ -80,8 +80,8 @@
         <section class="account-section ptb-100">
             <div class="container">
                 <div class="row">
-                {% include "./components/accountSidebar.html" %}
-                    <div class="col-md-8">
+                <!-- {% include "./components/accountSidebar.html" %} -->
+                    <div class="col-md-12">
                         <!-- <h3>Fill the form to post a job</h3> -->
                         <div style="height: 90vh;" class="row shadow rounded-3 ">
                             <div style="border-right: 1px solid #dfdfdf; overflow-y: scroll;" class="col-md-4 h-100 p-0">
@@ -104,6 +104,7 @@
                                             </div>
                                         </div>
                                         <div class="block">
+                                            <a href="{% url 'account' %}" class="btn btn-primary">Dashboard</a>
                                             <button class="btn btn-danger">Block</button>
                                         </div>
                                     </div>

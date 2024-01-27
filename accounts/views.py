@@ -58,10 +58,14 @@ def Account(request):
     if request.user.is_hr:
         jobs = request.user.job_posts
         companies = request.user.companies.all().count()
+        # def textData(data = 'Test'):
+        #     print(data)
+        #     return f'{data} Working'
         context = {
             'total_jobs': jobs.all().count(),
             'total_active_jobs': jobs.filter(last_date_of_apply__gte = currentDate).count(),
-            'total_companies': companies
+            'total_companies': companies,
+            # 'test': textData
         }
         return render(request, 'account.html', context= context)
     return render(request, 'account.html')

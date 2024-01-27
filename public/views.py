@@ -16,10 +16,10 @@ from candidates.models import FavoriteJob
 currentDate: date = date.today()
 
 def index(request):
-    categories = JobCategory.objects.filter(featured = True)[:8]
+    categories = JobCategory.objects.prefetch_related('jobs').filter(featured = True)[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
-    companies = Company.objects.select_related('user').all()[:4]
-    posts = BlogPost.objects.select_related('category','author').filter(status='Published').order_by('-created_at')[:3]
+    companies = Company.objects.select_related('user').prefetch_related('jobs').all()[:4]
+    posts = BlogPost.objects.select_related('category','author').prefetch_related('likes').filter(status='Published').order_by('-created_at')[:3]
     context = {
         'categories': categories,
         'today': currentDate,
@@ -88,7 +88,9 @@ def Jobs(request):
         try:
             keyword = request.GET.get('keyword')
             location = request.GET.get('location')
-            jobs = JobPost.objects.select_related('job_category','user', 'company').filter( Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location) and Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword)).order_by('-created_at')
+            q_location = (Q(address__icontains = location) | Q(country__icontains = location) | Q(state__icontains = location) | Q(city__icontains = location) | Q(company__location__icontains = location))
+            q_keyword = (Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword))
+            jobs = JobPost.objects.select_related('job_category','user', 'company').filter( q_location & q_keyword).order_by('-created_at')
             paginator = Paginator(object_list=jobs, per_page=8)
             page_number: str = request.GET.get('page')
             if request.user.is_authenticated:
@@ -185,14 +187,20 @@ def BlogDetails(request, slug):
                 return redirect('blog', slug)
         else:
             try:
-                categories = Category.objects.all()
+                categories = Category.objects.prefetch_related('posts').all()
                 related_posts = BlogPost.objects.select_related('author','category').filter(Q(category = blog.category) | Q(tags__icontains = blog.tags)).exclude(slug=slug)[:4]
                 tags = blog.tags
+                comments = blog.comments.select_related('user','reply', 'post').prefetch_related('replies').all()
+                likes = blog.likes.select_related('user','post').all()
                 context = {
                     'blog': blog,
                     'categories': categories,
-                    'tags': tags.split(','),
-                    'related_posts': related_posts
+                    'tags': tags.split(sep=','),
+                    'related_posts': related_posts,
+                    'comments': comments,
+                    'numComments': comments.count(),
+                    'likes': likes,
+                    'user': request.user
                 }
                 return render(request=request, template_name='blog-details.html', context= context)
             except Exception as e:

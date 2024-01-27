@@ -52,12 +52,12 @@
 									</li>
 									<li>
 										<i class='bx bx-like'></i>
-										{{blog.likes.all.count}}
+										{{likes.count}}
 									</li>
 									<li>
                                         <a href="#comments" class="text-black" title="comments" >
 										<i class='bx bx-comment'></i>
-										{{blog.comments.all.count}}</a>
+										{{numComments}}</a>
 									</li>
 								</ul>
                             </div>
@@ -77,7 +77,6 @@
                                 </ul>
                             </div>
                             <div id="comments">
-                        {% with comments=blog.comments.all %}
                         {% if comments %}
                             <h3 class="my-4">Comments</h3>
                             {% for comment in comments %}
@@ -138,8 +137,7 @@
                                 </span>
                             </div>
                         {% endif %}
-                        {% endwith %}
-                        {% if request.user.is_authenticated %}
+                        {% if user.is_authenticated %}
                             <form class="comment-form" method="post">
                                 {% csrf_token %}
                                 <h3>Leave a Reply</h3>
