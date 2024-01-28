@@ -1,0 +1,179 @@
+{% extends './components/Base.html' %}
+
+{% block meta %}
+	<title>Account</title>
+{% endblock meta %}
+
+{% block content %}
+
+{% include './components/header.html' %}
+        <section class="account-section ptb-100">
+            <div class="container">
+                <div class="row">
+                {% include "./components/accountSidebar.html" %}
+                    <div class="col-md-8">
+                        <div class="account-details">
+                            <div class="d-flex justify-content-between align-content-center">
+                                <h3>Edit the job</h3>
+                                <a target="_blank" class="btn btn-primary" href="{% url 'job' job.id %}"> View Job </a>
+                            </div>
+                            <form class="needs-validation" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInput1">Job Title</label>
+                                            <input name="title" type="text" value="{{job.title}}" class="form-control" id="exampleInput1" placeholder="Job Title or Keyword" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Category</label>
+                                            <select name="category" class="form-select form-control" title="category" required>
+                                                <option value="" disabled hidden>Select Category</option>
+                                                {% for category in categories %}
+                                                    {% if category.id == job.job_category.id %}
+                                                        <option selected value="{{category.id}}">{{category.name}}</option>
+                                                    {% else %}
+                                                        <option value="{{category.id}}">{{category.name}}</option>
+                                                    {% endif %}
+
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Looking for ?</label>
+                                            <input name="looking_position" type="text" class="form-control" value="{{job.looking_position}}" id="exampleInput5" placeholder="e.g. Full Stack Engineer" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Country</label>
+                                            <input name="country" type="text" class="form-control" value="{{job.country}}" id="exampleInput5" placeholder="e.g. United Kingdom" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Company</label>
+                                            <select name="company" class="form-select form-control" title="Company">
+                                                <option value="" selected disabled hidden>Select The Company</option>
+                                                {% if companies %}
+                                                    {% for company in companies %}
+                                                        {% if company.id == job.company.id %}
+                                                            <option selected value="{{company.id}}">{{company.company_name}}</option>
+                                                        {% else %}
+                                                            <option value="{{company.id}}">{{company.company_name}}</option>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <option><a href="{% url 'add-company' %}">No Companies Available! Please create one first.</a></option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Location</label>
+                                            <input name="address" type="text" class="form-control" value="{{job.address}}" id="exampleInput5" placeholder="e.g. London" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Type</label>
+                                            <select name="job_type" class="form-select form-control" title="type">
+                                                <option disabled hidden>Job Type</option>
+                                                <option
+                                                {% if job.job_type == 'Full Time' %}selected{% endif %}
+                                                value="Full Time">Full Time</option>
+                                                <option
+                                                {% if job.job_type == 'Part Time' %}selected{% endif %} value="Part Time">Part Time</option>
+                                                <option
+                                                {% if job.job_type == 'Project Based' %}selected{% endif %} value="Project Based">Project Based</option>
+                                                <option
+                                                {% if job.job_type == 'Freelance' %}selected{% endif %} value="Freelance">Freelance</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Job Tags</label>
+                                            <input name="keywords" type="text" class="form-control" value="{{job.keywords}}" id="exampleInput6" placeholder="e.g. web design, graphics design, video editing" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Salary</label>
+                                            <input name="salary" type="number" class="form-control" value="{{job.salary}}" id="exampleInput7" placeholder="e.g. $20,000">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Experience</label>
+                                            <input name="experience" type="number" class="form-control" value="{{job.minimum_experience}}" id="exampleInput8" placeholder="e.g. 1 year" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Last Apply Date | current Date is <b>( {{job.last_date_of_apply}} ) </b></label>
+                                            <input name="last_date_of_apply" type="date" class="form-control" id="exampleInput8" placeholder="e.g. 1 year">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="d-block text-center">
+                                            <img width="100%" src="{{job.thumbnail.url}}" alt="thumbnail">
+                                            <p><b>Current Thumbnail Image</b></p>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="formFileLg" class="form-label">Thumbnail Image</label>
+                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="thumbnail" accept="image/*" value="{{job.thumbnail}}" >
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="description_editor">Job Description</label>
+                                            <textarea style="height: 300px;" class="form-control description-area" id="description_editor" name="description" value="{{job.description}}" rows="6" maxlength="5000" placeholder="Job Description" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="job_requirement">Job Requirements</label>
+                                            <textarea name="requirements" style="height: 300px;" class="form-control description-area" id="job_requirement" value="{{job.requirements}}" rows="6" maxlength="5000" placeholder="Job Requirements" required></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 text-center">
+                                        <button type="submit" class="post-btn account-btn ">
+                                            Update
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Account Area End -->
+
+        {% include './components/footer.html' %}
+
+        <script>
+            var editor1 = new RichTextEditor("#description_editor");
+            const description = ` {% autoescape off %}{{job.description}}{% endautoescape %} `
+            const job_requirement = ` {% autoescape off %}{{job.requirements}}{% endautoescape %} `
+            editor1.insertHTML(description)
+            var editor2 = new RichTextEditor("#job_requirement");
+            editor2.insertHTML(job_requirement)
+        </script>
+        {% endblock content %}

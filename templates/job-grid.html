@@ -53,7 +53,7 @@
 										<div class="col-lg-6">
 											<div class="job-info">
 												<h3>
-													<a href="{% url 'job' job.pk %}">{{job.title}}</a>
+													<a title="{{job.title}}" href="{% url 'job' job.pk %}">{{job.title|truncatechars:23}}</a>
 												</h3>
 												<ul>
 													<li>Via <a href="#">{{job.user.get_full_name}}</a></li>
@@ -224,4 +224,18 @@
         <!-- Subscribe Section End -->
 
 		{% include './components/footer.html' %}
+		<!-- Search Highlight Code -->
+		<!-- <script type="text/javascript">
+			const highlight = (text) => {
+				const inputText = document.querySelector(".job-info");
+				let innerHTML = inputText.innerHTML;
+				let innerHTMLlower = String(innerHTML).toLowerCase();
+				let index = innerHTML.indexOf(text);
+				if (index >= 0) {
+					inputText.innerHTML= innerHTMLlower.split(text).join(`<a title="${text}" style="background:yellow;">${text}</a>`);
+				}
+			}
+
+			highlight('Test')
+		</script> -->
 		{% endblock content %}

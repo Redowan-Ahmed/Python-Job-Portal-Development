@@ -1,4 +1,5 @@
 from datetime import date
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from allauth.account.views import LoginView, SignupView
 from hr.models import JobCategory, Company, JobPost
@@ -109,8 +110,8 @@ def PostJob(request):
             'categories': categories,
             'companies': companies
         }
-        return render(request,'account-post-job.html', context= context)
-    return redirect('account')
+        return render(request=request,template_name='account-post-job.html', context= context)
+    return redirect(to='account')
 
 @login_required
 def ViewJobPosts(request):
@@ -120,6 +121,71 @@ def ViewJobPosts(request):
         'today': currentDate
     }
     return render(request, 'account-jobs.html', context= context)
+
+@login_required
+def EditJobPost(request, pk):
+    try:
+        job = get_object_or_404(JobPost, pk=pk)
+        if request.user == job.user:
+            companies = Company.objects.filter(user = request.user)
+            categories = JobCategory.objects.all()
+            if request.method == 'POST':
+                title = request.POST.get('title')
+                category = request.POST.get('category')
+                description = request.POST.get('description')
+                requirements = request.POST.get('requirements')
+                keywords = request.POST.get('keywords')
+                salary = request.POST.get('salary')
+                job_type = request.POST.get('job_type')
+                address = request.POST.get('address')
+                company = request.POST.get('company')
+                looking_position = request.POST.get('looking_position')
+                experience = request.POST.get('experience')
+                country = request.POST.get('country')
+                last_date_of_apply = request.POST.get('last_date_of_apply')
+                thumbnail = request.FILES.get('thumbnail')
+                try:
+                    category_obj = get_object_or_404(JobCategory, id = category)
+                    company_obj = get_object_or_404(Company, id = company)
+
+                    if title and category and description and requirements and keywords and salary and job_type and address and looking_position and experience and country:
+                        job.title = title
+                        job.job_category = category_obj
+                        if thumbnail:
+                            job.thumbnail = thumbnail
+                        job.description = description
+                        job.requirements = requirements
+                        job.minimum_experience = experience
+                        job.looking_position = looking_position
+                        job.address = address
+                        job.job_type = job_type
+                        job.country = country
+                        job.salary = salary
+                        job.keywords = keywords
+                        if last_date_of_apply:
+                            job.last_date_of_apply = last_date_of_apply
+                        job.company = company_obj
+                        job.save()
+                        messages.success(request=request, message=f"You're successfully updated {job.title} ")
+                        return redirect('job-edit', job.pk)
+                    else:
+                        print(title, category , description , requirements , keywords , salary , job_type , address , looking_position , experience , country , thumbnail , last_date_of_apply)
+                        messages.error(request, 'Something is wrong, Please fill the form properly')
+                        raise ValueError('Got unexpected condition')
+                except Exception as e:
+                    print("Error occurred while posting job",e)
+            context = {
+                'job': job,
+                'categories': categories,
+                'companies': companies,
+                'today': currentDate
+            }
+            return render(request=request, template_name='account-job-edit.html', context= context)
+        else:
+            messages.warning(request=request,message="This isn't your job! You can only edit or delete your own posts.")
+            return HttpResponseRedirect(redirect_to='/account/jobs')
+    except Exception as e:
+        print(e)
 
 @login_required
 def Companies(request):

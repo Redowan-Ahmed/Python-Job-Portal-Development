@@ -139,7 +139,7 @@
                                     </div>
                                     {% if user == job.user %}
                                         <div class="theme-btn rounded-2 text-center">
-                                            <a href="#" class="default-btn rounded-2 w-100">
+                                            <a href="{% url 'edit-job' job.id %}" class="default-btn rounded-2 w-100">
                                                 Edit
                                             </a>
                                         </div>
@@ -253,7 +253,7 @@
                                 <div class="col-md-1">
                                     <div class="company-logo">
                                         <a href="{% url 'job' related_job.pk %}">
-                                            <img width="50px" src="{{related_job.thumbnail.url}}" alt="logo">
+                                            <img class="object-fit rounded-circle" width="100%" height="100%" src="{{related_job.thumbnail.url}}" alt="logo">
                                         </a>
                                     </div>
                                 </div>
