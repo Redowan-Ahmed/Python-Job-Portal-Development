@@ -47,6 +47,11 @@ class Comment(BaseModel):
         else:
             return f"{self.reply.user.get_full_name()} replied to {self.reply.comment} "
 
+
+    # def save(self, *args, **kwargs):
+    #     self.comment = str(object=self.comment.encode(encoding='unicode_escape'))
+    #     super(Comment, self).save(*args, **kwargs)
+
 class BlogPost(BaseModel):
     title = models.CharField(max_length=400, db_index=True)
     content = RichTextUploadingField(max_length=6000)

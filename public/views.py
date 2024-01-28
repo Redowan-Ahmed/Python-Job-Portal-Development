@@ -204,7 +204,7 @@ def BlogDetails(request, slug):
                 categories = Category.objects.prefetch_related('posts').all()
                 related_posts = BlogPost.objects.select_related('author','category').filter(Q(category = blog.category) | Q(tags__icontains = blog.tags)).exclude(slug=slug)[:4]
                 tags = blog.tags
-                comments = blog.comments.select_related('user','reply', 'post').prefetch_related('replies').all()
+                comments = blog.comments.select_related('user','reply', 'post').prefetch_related('replies').all().order_by('created_at')
                 likes = blog.likes.select_related('user','post').all()
                 context = {
                     'blog': blog,

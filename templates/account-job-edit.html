@@ -15,7 +15,7 @@
                         <div class="account-details">
                             <div class="d-flex justify-content-between align-content-center">
                                 <h3>Edit the job</h3>
-                                <a target="_blank" class="btn btn-primary" href="{% url 'job' job.id %}"> View Job </a>
+                                <a target="_blank" class="btn btn-danger" href="{% url 'job' job.id %}"> View Job </a>
                             </div>
                             <form class="needs-validation" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
@@ -169,11 +169,13 @@
         {% include './components/footer.html' %}
 
         <script>
-            var editor1 = new RichTextEditor("#description_editor");
+            let editor1 = new RichTextEditor("#description_editor");
             const description = ` {% autoescape off %}{{job.description}}{% endautoescape %} `
             const job_requirement = ` {% autoescape off %}{{job.requirements}}{% endautoescape %} `
             editor1.insertHTML(description)
-            var editor2 = new RichTextEditor("#job_requirement");
+            editor1.collapse(false)
+            let editor2 = new RichTextEditor("#job_requirement");
             editor2.insertHTML(job_requirement)
+            editor2.collapse(false)
         </script>
         {% endblock content %}
