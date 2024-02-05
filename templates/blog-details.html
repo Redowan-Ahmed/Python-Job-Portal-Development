@@ -122,7 +122,8 @@
                                             <small class="text-black-100" title="{{reply.user.get_full_name}} replied">{{reply.created_at.date}}</small>
                                         </div>
                                         </div>
-                                        <p class="mb-0 fs-6">Replied: {{reply.comment}}</p>
+                                        <p class="mb-0 fs-6">{% autoescape off %}{{reply.comment}}{% endautoescape %}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

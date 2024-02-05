@@ -86,7 +86,7 @@
         {% for category in categories %}
         <div class="col-lg-3 col-md-4 col-sm-6">
               <a href="{% url 'categorized-jobs' category.name %}">
-                <div class="category-card">
+                <div class="category-card rounded-3 ">
                   <i>
                   <img src="{{category.icon.url}}" width="80px" height="80px" class="object-fit" />
                   </i>
@@ -131,12 +131,12 @@
 
       {% for job in jobs %}
         <div class="col-sm-6">
-          <div class="job-card">
+          <div class="job-card rounded-3">
             <div class="row align-items-center">
               <div class="col-lg-3">
                 <div class="thumb-img">
                   <a href="job-details.html">
-                    <img width="100%" height="100%" class="object-fit"
+                    <img width="100%" height="140px" class="object-fit"
                       src="{{job.thumbnail.url}}"
                       alt="company logo"
                     />
@@ -278,7 +278,6 @@
     </div>
 
     <div class="row">
-      
       {% if companies %}
 
         {% for company in companies %}
@@ -287,19 +286,21 @@
             <div class="company-logo">
               <a href="#">
                 <img
-                  width="100px"
+                  class="rounded-3 object-fit"
+                  width="100%"
+                  height="200px"
                   src="{{company.company_logo.url}}"
                   alt="{{company.company_name}}"
                 />
               </a>
             </div>
             <div class="company-text">
-              <h3>{{company.company_name}}</h3>
-              <p>
+              <h3 title="{{company.company_name}}">{{company.company_name|truncatechars:20}}</h3>
+              <p title="{{company.location}}">
                 <i class="bx bx-location-plus"></i>
-                {{company.location}}
+                {{company.location|truncatechars:25}}
               </p>
-              <a href="#" class="company-btn"> {{company.jobs.all.count}} Open Position </a>
+              <a class="company-btn rounded-2"> {{company.jobs.all.count}} Published Positions </a>
             </div>
           </div>
         </div>
@@ -466,6 +467,7 @@
 <!-- Job Info Section End -->
 
 
+{% if candidates %}
 <!-- Candidate Section Start -->
 <section class="candidate-section pb-100">
   <div class="container">
@@ -479,6 +481,7 @@
     </div>
 
     <div class="condidate-slider owl-carousel owl-theme">
+      {% for candidate in candidates %}
       <div class="condidate-item">
         <div class="candidate-img">
           <img src="static/assets/img/candidate/1.jpg" alt="candidate image" />
@@ -489,7 +492,7 @@
           <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
         </div>
         <div class="candidate-text">
-          <h3><a href="candidate-details.html">Mibraj Alex</a></h3>
+          <h3><a href="candidate-details.html">Mibraj Alex {{candidate}}</a></h3>
           <ul>
             <li>
               <i class="bx bx-filter-alt"></i>
@@ -512,249 +515,12 @@
           </div>
         </div>
       </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/2.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Felica Kareon</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              SEO Expart
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Georgetown, USA
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              8D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/3.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Malisha Patel</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              Project Management
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Madison, USA
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              1D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/1.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Mibraj Alex</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              Construction & Property
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Botchergate, Carlisle
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              9D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/4.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Quence Joes</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              Web Developer
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Augusta, Maine
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              8D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/2.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Felica Kareon</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              SEO Expart
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Georgetown, USA
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              8D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/3.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Malisa Petel</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              Project Management
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Madison, USA
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              1D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <div class="condidate-item">
-        <div class="candidate-img">
-          <img src="static/assets/img/candidate/4.jpg" alt="candidate image" />
-        </div>
-        <div class="candidate-social">
-          <a href="#" target="_blank"><i class="bx bxl-facebook"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-twitter"></i></a>
-          <a href="#" target="_blank"><i class="bx bxl-instagram"></i></a>
-        </div>
-        <div class="candidate-text">
-          <h3><a href="candidate-details.html">Quence Joes</a></h3>
-          <ul>
-            <li>
-              <i class="bx bx-filter-alt"></i>
-              Web Developer
-            </li>
-            <li>
-              <i class="bx bx-location-plus"></i>
-              Augusta, Maine
-            </li>
-          </ul>
-
-          <div class="bottom-text">
-            <p>
-              <i class="bx bx-stopwatch"></i>
-              8D ago
-            </p>
-            <a href="#">
-              <i class="bx bx-heart"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
 <!-- Candidate Section End -->
-
+{% endif %}
 <!-- Testimonial Section Start -->
 <section class="testimonial-section ptb-100">
   <div class="container">
@@ -769,69 +535,41 @@
 
     <div class="row">
       <div class="testimonial-slider owl-carousel owl-theme">
-        <div class="testimonial-items">
-          <div class="row align-items-center">
-            <div class="col-lg-5 col-md-6 offset-md-3 offset-lg-0 p-0">
-              <div class="testimonial-img">
-                <img
-                  src="static/assets/img/testimonial-img.jpg"
-                  alt="testimonial image"
-                />
-              </div>
-              <div class="testimonial-img-text">
-                <h3>Alisa Meair</h3>
-                <p>CEO of Company</p>
-              </div>
-            </div>
-            <div class="col-lg-7 p-0">
-              <div class="testimonial-text">
-                <i class="flaticon-left-quotes-sign"></i>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do mod tempor incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse ultrices gravida. Risus commodo viverra
-                  maecenas accumsan lacus vel facilisis. Lorem Ipsum is simply
-                  dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy Lorem Ipsum is
-                  simply dummy text of the printing and typesetting industry.
-                  Lorem Ipsum has been the industry's standard dummy
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="testimonial-items">
-          <div class="row align-items-center">
-            <div class="col-lg-5 col-md-6 offset-md-3 offset-lg-0 p-0">
-              <div class="testimonial-img">
-                <img
-                  src="static/assets/img/testimonial-img-2.jpg"
-                  alt="testimonial image"
-                />
+        {% for testimonial in testimonials %}
+          <div class="testimonial-items">
+            <div class="row align-items-center">
+              <div class="col-lg-5 col-md-6 offset-md-3 offset-lg-0 p-0">
+                <div class="testimonial-img">
+                  <img
+                    src="static/assets/img/testimonial-img.jpg"
+                    alt="testimonial image"
+                  />
+                </div>
+                <div class="testimonial-img-text">
+                  <h3>Alisa Meair {{testimonial}}</h3>
+                  <p>CEO of Company</p>
+                </div>
               </div>
-              <div class="testimonial-img-text">
-                <h3>John Doe</h3>
-                <p>Web Designer</p>
-              </div>
-            </div>
-            <div class="col-lg-7 p-0">
-              <div class="testimonial-text">
-                <i class="flaticon-left-quotes-sign"></i>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do mod tempor incididunt ut labore et dolore magna aliqua.
-                  Quis ipsum suspendisse ultrices gravida. Risus commodo viverra
-                  maecenas accumsan lacus vel facilisis. Lorem Ipsum is simply
-                  dummy text of the printing and typesetting industry. Lorem
-                  Ipsum has been the industry's standard dummy Lorem Ipsum is
-                  simply dummy text of the printing and typesetting industry.
-                  Lorem Ipsum has been the industry's standard dummy
-                </p>
+              <div class="col-lg-7 p-0">
+                <div class="testimonial-text">
+                  <i class="flaticon-left-quotes-sign"></i>
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do mod tempor incididunt ut labore et dolore magna aliqua.
+                    Quis ipsum suspendisse ultrices gravida. Risus commodo viverra
+                    maecenas accumsan lacus vel facilisis. Lorem Ipsum is simply
+                    dummy text of the printing and typesetting industry. Lorem
+                    Ipsum has been the industry's standard dummy Lorem Ipsum is
+                    simply dummy text of the printing and typesetting industry.
+                    Lorem Ipsum has been the industry's standard dummy
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        {% endfor %}
+
       </div>
     </div>
   </div>
@@ -897,6 +635,9 @@
         <p>No Posts Found</p>
       {% endif %}
 
+    </div>
+    <div class="d-block text-center">
+      <a class="btn btn-danger btn-lg" href="{% url 'blogs' %}">View All</a>
     </div>
   </div>
 </section>

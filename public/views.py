@@ -10,7 +10,7 @@ from accounts.models import User, CandidateProfile
 from hr.models import JobCategory, JobPost, Company
 from datetime import date
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.db.models import Q, Avg, Max, Min, F
 from candidates.models import FavoriteJob
 
 
@@ -22,6 +22,8 @@ def index(request):
     companies = Company.objects.select_related('user').prefetch_related('jobs').all()[:4]
     posts = BlogPost.objects.select_related('category','author').prefetch_related('likes').filter(status='Published').order_by('-created_at')[:3]
     loved_jobs = []
+    featured_candidates = [1,2,3,4,5,6,7,8,9]
+    testimonials = [1,2,3,4]
     user = request.user
     if user.is_authenticated:
         favorites = user.loved_jobs.select_related('job').all()
@@ -33,7 +35,9 @@ def index(request):
         'jobs': jobs,
         'companies': companies,
         'posts': posts,
-        'loved_jobs': loved_jobs
+        'loved_jobs': loved_jobs,
+        'candidates': featured_candidates,
+        'testimonials': testimonials
     }
     return render(request=request, template_name='index.html', context= context)
 
@@ -100,7 +104,7 @@ def Jobs(request):
             q_keyword = (Q(title__icontains = keyword) | Q(description__icontains = keyword)| Q(keywords__icontains = keyword) | Q(looking_position__icontains = keyword))
             jobs = JobPost.objects.select_related('job_category','user', 'company').filter( q_location & q_keyword).order_by('-created_at')
             paginator = Paginator(object_list=jobs, per_page=8)
-            page_number: str = request.GET.get('page')
+            page_number: int = request.GET.get('page')
             loved_jobs = []
             user = request.user
             if user.is_authenticated:
@@ -108,7 +112,7 @@ def Jobs(request):
                 for favorite in favorites:
                     loved_jobs.append(favorite.job)
             try:
-                page_obj = paginator.get_page(page_number)
+                page_obj = paginator.get_page(number=page_number)
                 context = {
                     'jobs': page_obj.object_list,
                     "page_obj": page_obj,

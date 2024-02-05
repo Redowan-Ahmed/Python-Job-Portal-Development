@@ -43,7 +43,7 @@ class Comment(BaseModel):
 
     def __str__(self) -> str:
         if not self.reply:
-            return f"Comment by: {self.user.get_full_name()} on blog post( {self.post.title} )"
+            return f"Comment by: {self.user.get_full_name()} on blog post( {self.post.slug} )"
         else:
             return f"{self.reply.user.get_full_name()} replied to {self.reply.comment} "
 

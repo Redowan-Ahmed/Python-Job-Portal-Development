@@ -124,7 +124,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>Last Apply Date | current Date is <b>( {{job.last_date_of_apply}} ) </b></label>
-                                            <input name="last_date_of_apply" type="date" class="form-control" id="exampleInput8" placeholder="e.g. 1 year">
+                                            <input name="last_date_of_apply" type="date" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" value="{{job.last_date_of_apply.year}}-{{job.last_date_of_apply.month}}-{{job.last_date_of_apply.day}}">
                                         </div>
                                     </div>
 

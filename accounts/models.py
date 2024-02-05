@@ -65,7 +65,7 @@ class HrProfile(BaseModel):
 
 
 
-@receiver(post_save, sender=User)
+@receiver(signal=post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     try:
         if created:

@@ -168,67 +168,69 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <div class="job-sidebar">
-                            <h3>Posted By</h3>
-                            <div class="posted-by">
-                                {% if job.user.profile_picture %}
-                                    <img width="80px" height="80px" src="{{job.user.profile_picture.url}}" alt="{{job.user.get_full_name}}">
-                                {% else %}
-                                    <img src="/static/assets/img/client-1.png" alt="{{job.user.get_full_name}}">
-                                {% endif %}
-                                <h4>{{job.user.get_full_name}}</h4>
-                                {% if job.user.hr_profile.position %}
-                                    <span>{{job.user.hr_profile.position}}</span>
-                                    {% else %}
-                                    <span>No Position Set Yet!</span>
-                                {% endif %}
-                            </div>
-                        </div>
+                            <div class="position-sticky" style="top: 100px;">
+                                <div class="job-sidebar">
+                                    <h3>Posted By</h3>
+                                    <div class="posted-by">
+                                        {% if job.user.profile_picture %}
+                                            <img width="80px" height="80px" src="{{job.user.profile_picture.url}}" alt="{{job.user.get_full_name}}">
+                                        {% else %}
+                                            <img src="/static/assets/img/client-1.png" alt="{{job.user.get_full_name}}">
+                                        {% endif %}
+                                        <h4>{{job.user.get_full_name}}</h4>
+                                        {% if job.user.hr_profile.position %}
+                                            <span>{{job.user.hr_profile.position}}</span>
+                                            {% else %}
+                                            <span>No Position Set Yet!</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
 
-                        <div class="job-sidebar">
-                            <h3>Location</h3>
-                            <iframe class="rounded-2" src="https://maps.google.com/maps?&amp;q={{job.country}},{{job.city}},{{job.address}}&amp;output=embed" frameborder="0"></iframe>
-                        </div>
+                                <div class="job-sidebar">
+                                    <h3>Location</h3>
+                                    <iframe class="rounded-2" src="https://maps.google.com/maps?&amp;q={{job.country}},{{job.city}},{{job.address}}&amp;output=embed" frameborder="0"></iframe>
+                                </div>
 
-                        <div class="job-sidebar">
-                            <h3>Keywords</h3>
-                            <ul>
-                                {% if keywords %}
-                                    {% for keyword in keywords %}
+                                <div class="job-sidebar">
+                                    <h3>Keywords</h3>
+                                    <ul>
+                                        {% if keywords %}
+                                            {% for keyword in keywords %}
+                                                <li>
+                                                    <a href="">{{keyword}}</a>
+                                                </li>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p> No Keyword Found!</p>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+
+                                <div class="job-sidebar social-share">
+                                    <h3>Share In</h3>
+                                    <ul>
                                         <li>
-                                            <a href="">{{keyword}}</a>
+                                            <a href="https://www.facebook.com/sharer/sharer.php?u={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
+                                                <i class="bx bxl-facebook"></i>
+                                            </a>
                                         </li>
-                                    {% endfor %}
-                                {% else %}
-                                    <p> No Keyword Found!</p>
-                                {% endif %}
-                            </ul>
-                        </div>
-
-                        <div class="job-sidebar social-share">
-                            <h3>Share In</h3>
-                            <ul>
-                                <li>
-                                    <a href="https://www.facebook.com/sharer/sharer.php?u={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
-                                        <i class="bx bxl-facebook"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://twitter.com/intent/tweet?text={{job.title}}&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
-                                        <i class="bx bxl-twitter"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://pinterest.com/pin/create/button/?url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&media={{request.META.HTTP_HOST}}{{job.thumbnail.url}}&description={{job.title}}" target="_blank">
-                                        <i class="bx bxl-pinterest"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&title={{job.title}}" target="_blank">
-                                        <i class="bx bxl-linkedin"></i>
-                                    </a>
-                                </li>
-                            </ul>
+                                        <li>
+                                            <a href="https://twitter.com/intent/tweet?text={{job.title}}&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}" target="_blank">
+                                                <i class="bx bxl-twitter"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://pinterest.com/pin/create/button/?url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&media={{request.META.HTTP_HOST}}{{job.thumbnail.url}}&description={{job.title}}" target="_blank">
+                                                <i class="bx bxl-pinterest"></i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{request.META.HTTP_HOST}}{{request.META.PATH_INFO}}&title={{job.title}}" target="_blank">
+                                                <i class="bx bxl-linkedin"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                         </div>
                     </div>
                 </div>

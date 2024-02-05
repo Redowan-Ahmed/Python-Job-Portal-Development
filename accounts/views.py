@@ -1,5 +1,4 @@
 from datetime import date
-from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from allauth.account.views import LoginView, SignupView
 from hr.models import JobCategory, Company, JobPost
@@ -7,8 +6,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import User
 from django.contrib import messages
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, resolve_url
 from candidates.models import FavoriteJob
+from django.db import transaction
+from django.core.paginator import Paginator
+from message.models import Message
+from django.db.models import Avg, Max, Min, Count
+from asgiref.sync import sync_to_async
+
+from hr.forms import CompanyForm, CompanyFormEdit
 
 # Create your views here.
 
@@ -35,7 +41,7 @@ def SignIn(request):
                 user = authenticate(request= request, email = email, password = password)
                 if user:
                     login(request = request, user= user)
-                    messages.info(request, "You are now logged in")
+                    messages.info(request=request, message="You are now logged in")
                     return redirect('account')
                 else:
                     messages.error(request, "Invalid Email or Password")
@@ -45,12 +51,12 @@ def SignIn(request):
 
 def SignOut(request):
     if request.user.is_authenticated:
-        logout(request)
-        messages.info(request, message="you're logged out")
+        logout(request=request)
+        messages.info(request=request, message="you're logged out")
         return redirect('signIn')
     else:
-        messages.warning(request, message="Please login")
-        return redirect('signIn')
+        messages.warning(request=request, message="Please login")
+        return redirect(to='signIn')
 
 
 @login_required
@@ -68,8 +74,8 @@ def Account(request):
             'total_companies': companies,
             # 'test': textData
         }
-        return render(request, 'account.html', context= context)
-    return render(request, 'account.html')
+        return render(request=request, template_name='account.html', context= context)
+    return render(request=request, template_name='account.html')
 
 
 @login_required(login_url='signIn')
@@ -98,7 +104,7 @@ def PostJob(request):
 
                 if title and category and description and requirements and keywords and salary and job_type and address and looking_position and experience and country and thumbnail and last_date_of_apply:
                     post = JobPost.objects.create(user= request.user, job_category =category_obj, company=company_obj, thumbnail= thumbnail, title= title, description= description, requirements=requirements, minimum_experience= experience, job_type= job_type, looking_position= looking_position, address=address, country= country, salary = salary, keywords=keywords, last_date_of_apply= last_date_of_apply)
-                    messages.success(request, "You're successfully posted a new job")
+                    messages.success(request=request, message="You're successfully posted a new job")
                     return redirect('job', post.pk)
                 else:
                     print(title, category , description , requirements , keywords , salary , job_type , address , looking_position , experience , country , thumbnail , last_date_of_apply)
@@ -116,13 +122,22 @@ def PostJob(request):
 @login_required
 def ViewJobPosts(request):
     jobs = JobPost.objects.filter(user= request.user).order_by('-created_at')
+    page_number:int = request.GET.get('page')
+    try:
+        pagination = Paginator(object_list=jobs, per_page=6)
+        page_obj = pagination.get_page(number=page_number)
+    except Exception as e:
+        print(e)
     context = {
-        'jobs': jobs,
-        'today': currentDate
+        'jobs': page_obj.object_list,
+        'today': currentDate,
+        'page_obj': page_obj
     }
-    return render(request, 'account-jobs.html', context= context)
+    return render(request=request, template_name='account-jobs.html', context= context)
+
 
 @login_required
+@transaction.atomic()
 def EditJobPost(request, pk):
     try:
         job = get_object_or_404(JobPost, pk=pk)
@@ -147,7 +162,6 @@ def EditJobPost(request, pk):
                 try:
                     category_obj = get_object_or_404(JobCategory, id = category)
                     company_obj = get_object_or_404(Company, id = company)
-
                     if title and category and description and requirements and keywords and salary and job_type and address and looking_position and experience and country:
                         job.title = title
                         job.job_category = category_obj
@@ -170,7 +184,7 @@ def EditJobPost(request, pk):
                         return redirect('job-edit', job.pk)
                     else:
                         print(title, category , description , requirements , keywords , salary , job_type , address , looking_position , experience , country , thumbnail , last_date_of_apply)
-                        messages.error(request, 'Something is wrong, Please fill the form properly')
+                        messages.error(request=request, message='Something is wrong, Please fill the form properly')
                         raise ValueError('Got unexpected condition')
                 except Exception as e:
                     print("Error occurred while posting job",e)
@@ -183,19 +197,88 @@ def EditJobPost(request, pk):
             return render(request=request, template_name='account-job-edit.html', context= context)
         else:
             messages.warning(request=request,message="This isn't your job! You can only edit or delete your own posts.")
-            return HttpResponseRedirect(redirect_to='/account/jobs')
+            return redirect(to='posted-jobs')
     except Exception as e:
         print(e)
 
 @login_required
 def Companies(request):
-
-    return render(request, 'account-company.html')
+    user = request.user
+    companies = Company.objects.prefetch_related('jobs').filter(user = user).order_by('-created_at')
+    context = {
+        "companies": companies,
+        'user': user
+    }
+    return render(request=request, template_name='account-companies.html', context=context)
 
 @login_required
 def CompanyPost(request):
+    user = request.user
+    form = CompanyForm()
+    if request.method == 'POST':
+        form = CompanyForm(data=request.POST or None, files=request.FILES or None)
+        if form.is_valid():
+            name = form.cleaned_data.get('company_name')
+            logo = form.files.get('company_logo')
+            location = form.cleaned_data.get('location')
+            website = form.cleaned_data.get('website')
+            email = form.cleaned_data.get('email')
+            employ = form.cleaned_data.get('employ_volume_average')
+            phone_number = form.cleaned_data.get('phone_number')
+            company = Company.objects.create(user = user, website = website, company_name = name, email = email, phone_number = phone_number,employ_volume_average = employ,  company_logo = logo, location= location)
+            messages.success(request=request, message=f'{company.company_name} is successfully created')
+            return redirect(to='dash-companies')
+        else:
+            messages.error(request=request, message='Something went wrong')
+    context = {
+        'form': form
+    }
+    return render(request=request, template_name='account-company.html', context=context)
 
-    return render(request, 'account-company.html')
+@login_required
+def CompanyEdit(request, pk):
+    user = request.user
+    try:
+        companyObj = get_object_or_404(klass=Company, pk=pk)
+        if companyObj.user == user:
+            form = CompanyFormEdit(initial=companyObj.__dict__, instance=companyObj)
+            if request.method == 'POST':
+                form = CompanyFormEdit(data=request.POST or None, files=request.FILES or None, initial=companyObj.__dict__, instance=companyObj)
+                if form.is_valid():
+                    name = form.cleaned_data.get('company_name')
+                    logo = form.files.get('company_logo')
+                    location = form.cleaned_data.get('location')
+                    website = form.cleaned_data.get('website')
+                    email = form.cleaned_data.get('email')
+                    employ = form.cleaned_data.get('employ_volume_average')
+                    phone_number = form.cleaned_data.get('phone_number')
+                    status = form.cleaned_data.get('status')
+                    with transaction.atomic():
+                        companyObj.company_name = name
+                        if logo:
+                            companyObj.company_logo = logo
+                        companyObj.location = location
+                        companyObj.website = website
+                        companyObj.email = email
+                        companyObj.employ_volume_average = employ
+                        companyObj.phone_number = phone_number
+                        companyObj.status = status
+                        companyObj.save()
+                    messages.success(request=request, message=f'{companyObj.company_name} is successfully save')
+                    return redirect(to='dash-companies')
+                else:
+                    messages.error(request=request, message='Something went wrong')
+            context = {
+                'form': form,
+                'edit':True,
+                'currentThumbnail': companyObj.company_logo
+            }
+            return render(request=request, template_name='account-company.html', context=context)
+        else:
+            messages.warning(request=request, message="You don't have any access to this company")
+            return redirect(to='dash-companies')
+    except Exception as e:
+        raise Exception(f'Something went wrong {e}')
 
 @login_required
 def savedJobs(request):
@@ -205,5 +288,20 @@ def savedJobs(request):
 
 
 @login_required
-def AccountChat(request):
-    return render(request, 'account-Chat.html')
+def AccountChat(request, id):
+    user = request.user
+    messages = Message.get_message(user=user)
+    active_direct = id
+    directs = Message.objects.filter(user= user, receiver__id = id )
+    print(messages)
+    print(directs)
+    return render(request=request, template_name='account-Chat.html')
+
+@login_required
+def AccountChats(request):
+    user = request.user
+    messages = Message.get_message(user=user)
+    directs = Message.objects.filter(user= user)
+    print(messages)
+    print(directs)
+    return render(request=request, template_name='account-Chat.html')

@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'candidates',
     'hr',
     'public',
+    'message',
 
 ]
 
@@ -70,6 +71,7 @@ MIDDLEWARE = [
     "allauth.account.middleware.AccountMiddleware",
     #Debug
     "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "accounts.customMiddelware.DashboardAuthMiddleware"
 ]
 
 INTERNAL_IPS = [
@@ -101,7 +103,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+#WSGI_APPLICATION = 'config.wsgi.application'
 ASGI_APPLICATION = 'config.asgi.application'
 
 

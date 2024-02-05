@@ -13,128 +13,54 @@
                 {% include "./components/accountSidebar.html" %}
                     <div class="col-md-8">
                         <div class="account-details">
-                        <h3>Fill the form to post a job</h3>
+
+                            {% if edit %}
+                            <h3 class="account-title">Edit Company
+                                {% if currentThumbnail%}
+                                    <img width="50px" src="{{currentThumbnail.url}}" alt="" id="thumbNailPreview"/>
+                                {% endif %}
+                            </h3>
+                            {% else %}
+                                <h3>Add New Company</h3>
+
+                            {% endif %}
                             <form class="needs-validation" method="post" enctype="multipart/form-data">
                                 {% csrf_token %}
                                 <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInput1">Job Title</label>
-                                            <input name="title" type="text" class="form-control" id="exampleInput1" placeholder="Job Title or Keyword" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Job Category</label>
-                                            <select name="category" class="form-select form-control" title="category" required>
-                                                <option value="" disabled selected hidden>Select Category</option>
-                                                {% for category in categories %}
-                                                    <option value="{{category.id}}">{{category.name}}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Looking for ?</label>
-                                            <input name="looking_position" type="text" class="form-control" id="exampleInput5" placeholder="e.g. Full Stack Engineer" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Country</label>
-                                            <input name="country" type="text" class="form-control" id="exampleInput5" placeholder="e.g. United Kingdom" required>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Company</label>
-                                            <select name="company" class="form-select form-control" title="Company">
-                                                <option value="" selected disabled hidden>Select The Company</option>
-                                                {% if companies %}
-                                                {% for company in companies %}
-                                                    <option value="{{company.id}}">{{company.company_name}}</option>
-                                                {% endfor %}
-                                                {% else %}
-                                                <option><a href="{% url 'home' %}">No Companies Available! Please create one first.</a></option>
+                                    {% for field in form %}
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                {{ field.label_tag }} {{ field }}
+                                                {% if field.errors %}
+                                                <ul>
+                                                    {% for error in field.errors %}
+                                                        <li class="text-danger">{{error}}</li>
+                                                    {% endfor %}
+                                                </ul>
                                                 {% endif %}
-                                            </select>
+                                                {% if field.help_text %}
+                                                <p class="help" id="{{ field.auto_id }}_helptext">
+                                                    {{ field.help_text|safe }}
+                                                </p>
+                                                {% endif %}
+                                            </div>
                                         </div>
-                                    </div>
+                                    {% endfor %}
 
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Location</label>
-                                            <input name="address" type="text" class="form-control" id="exampleInput5" placeholder="e.g. London" required>
+                                        {% if edit %}
+                                        <div class="col-md-12 text-center">
+                                            <button type="submit" class="post-btn account-btn ">
+                                                Update
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Job Type</label>
-                                            <select name="job_type" class="form-select form-control" title="type">
-                                                <option selected disabled hidden>Job Type</option>
-                                                <option value="Full Time">Full Time</option>
-                                                <option value="Part Time">Part Time</option>
-                                                <option value="Project Based">Project Based</option>
-                                                <option value="Freelance">Freelance</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Job Tags</label>
-                                            <input name="keywords" type="text" class="form-control" id="exampleInput6" placeholder="e.g. web design, graphics design, video editing" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Salary</label>
-                                            <input name="salary" type="number" class="form-control" id="exampleInput7" placeholder="e.g. $20,000">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label>Experience</label>
-                                            <input name="experience" type="number" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Last Apply Date</label>
-                                            <input name="last_date_of_apply" type="date" class="form-control" id="exampleInput8" placeholder="e.g. 1 year" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="formFileLg" class="form-label">Thumbnail Image</label>
-                                            <input class="form-control form-control-lg" id="formFileLg" type="file" name="thumbnail" accept="image/*" >
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="description_editor">Job Description</label>
-                                            <textarea style="height: 300px;" class="form-control description-area" id="description_editor" name="description" rows="6" maxlength="5000" placeholder="Job Description" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="job_requirment">Job Requirements</label>
-                                            <textarea name="requirements" style="height: 300px;" class="form-control description-area" id="job_requirment" rows="6" maxlength="5000" placeholder="Job Requirements" required></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-12 text-center">
-                                        <button type="submit" class="post-btn account-btn ">
-                                            Post A Job
-                                        </button>
-                                    </div>
+                                        {% else %}
+                                            <div class="col-md-12 text-center">
+                                                <button type="submit" class="post-btn account-btn ">
+                                                    Add New Company
+                                                </button>
+                                            </div>
+                                        {% endif %}
                                 </div>
                             </form>
                         </div>

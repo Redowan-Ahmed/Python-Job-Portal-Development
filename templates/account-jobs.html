@@ -8,7 +8,6 @@
         {% include "./components/accountSidebar.html" %}
             <div class="col-md-8">
                 <div class="jobs ">
-
                     {% if jobs %}
 
                         {% for job in jobs %}
@@ -78,7 +77,58 @@
                             No jobs available at the moment! Please check back later.
                         </div>
                     {% endif %}
+
                 </div>
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+
+					{% if page_obj.has_previous %}
+
+                        <li class="page-item">
+                            <a class="page-link"
+									href="?page={{page_obj.previous_page_number}}" tabindex="-{{page_obj.previous_page_number}}">
+                                <i class='bx bx-chevrons-left bx-fade-left'></i>
+                            </a>
+                        </li>
+						{% else %}
+						<li class="page-item disabled">
+                            <a class="page-link" href="#"  aria-disabled="true">
+                                <i class='bx bx-chevrons-left text-dark'></i>
+                            </a>
+                        </li>
+						{% endif %}
+
+						{% if page_obj.has_other_pages %}
+							{% for page in page_obj.paginator %}
+								<li class="page-item"><a class="page-link {% if page_obj.number == page.number %} active {% endif %}"
+										href="?page={{page.number}}"
+									>{{page.number}}</a></li>
+							{% endfor %}
+						{% endif %}
+
+
+						{% if page_obj.has_next %}
+							<li class="page-item">
+								<a class="page-link"
+									href="?page={{page_obj.next_page_number}}"
+								>
+									<i class='bx bx-chevrons-right bx-fade-right'></i>
+								</a>
+							</li>
+						{% else %}
+							<li class="page-item disabled">
+								<a class="page-link" href="#"
+								aria-disabled="true"
+								>
+									<i class='bx bx-chevrons-right text-dark'></i>
+								</a>
+							</li>
+						{% endif %}
+
+                    </ul>
+                </nav>
+				{% endif %}
             </div>
         </div>
     </div>

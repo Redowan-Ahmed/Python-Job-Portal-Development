@@ -7,8 +7,8 @@ from accounts.views import CustomLogin, CustomSignUp, SignOut
 
 urlpatterns = [
     path('', index , name='home'),
-    path('admin/', admin.site.urls),
-    path('dashboard/', include('accounts.urls')),
+    path(route='admin/', view=admin.site.urls),
+    path(route='dashboard/', view= include(arg='accounts.urls')), # secure route to dashboard
     path('all/accounts/', include('allauth.urls')),
     path('sign-in/', CustomLogin.as_view(), name='signIn'),
     path('sign-up/', CustomSignUp.as_view() , name='signUp'),
