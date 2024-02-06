@@ -12,7 +12,6 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from message.models import Message
 from django.db.models import Avg, Max, Min, Count
-from asgiref.sync import sync_to_async
 
 from hr.forms import CompanyForm, CompanyFormEdit
 
@@ -288,14 +287,14 @@ def savedJobs(request):
 
 
 @login_required
-def AccountChat(request, id):
+def AccountChat(request, pk):
     user = request.user
     messages = Message.get_message(user=user)
-    active_direct = id
-    directs = Message.objects.filter(user= user, receiver__id = id )
+    active_direct = pk
+    # directs = Message.objects.filter(user= user, receiver__pk = pk )
     print(messages)
-    print(directs)
-    return render(request=request, template_name='account-Chat.html')
+    print(pk)
+    return render(request=request, template_name='account-Chat.html', context={"room_name": pk})
 
 @login_required
 def AccountChats(request):

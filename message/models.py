@@ -2,6 +2,7 @@ from django.db import models
 from base.model import BaseModel
 from django.contrib.auth import get_user_model
 # Create your models here.
+from django_cryptography.fields import encrypt
 
 
 class Message(BaseModel):
@@ -45,3 +46,12 @@ class Message(BaseModel):
 
     def __str__(self) -> str:
         return self.user.email
+
+
+
+class TestModel(BaseModel):
+    name = models.CharField(max_length=50)
+    sensitive_data = encrypt(models.CharField(max_length=50))
+
+    def __str__(self):
+        return self.name

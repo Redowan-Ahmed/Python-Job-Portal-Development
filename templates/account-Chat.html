@@ -133,8 +133,8 @@
                                 </div>
                                 <div class="chatForm position-sticky bottom-0 w-100">
                                     <form id="sendMessageForm" class="d-flex p-3 gap-3">
-                                        <input class="form-control w-75" type="text" name="message" placeholder="Type your message..." required> </input>
-                                        <input class="btn btn-primary w-25 h-auto" type="submit" placeholder="Submit"/>
+                                        <input id="inputmessage" class="form-control w-75" type="text" name="message" placeholder="Type your message..." required> </input>
+                                        <input id="submitI" class="btn btn-primary w-25 h-auto" type="submit" placeholder="Submit"/>
                                     </form>
                                 </div>
                             </div>
@@ -146,4 +146,55 @@
         <!-- Account Area End -->
 
         {% include './components/footer.html' %}
+
+        {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        document.querySelector('#sendMessageForm').addEventListener('submit', (event)=>{
+            event.preventDefault();
+            const messageInputDom = document.querySelector('#inputmessage');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+            const box = document.querySelector(".chatbox");
+            box.scrollTop = box.scrollHeight;
+        })
+
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('.chatbox').innerHTML +=
+            `<div class="receiverMessage">
+                <div>
+                    <span> ${data.message}</span>
+                    <br/>
+                    <small>10/10/2024</small>
+                </div>
+                <div class="rounded-circle p-0 shadow-none">
+                    <img class="rounded-circle border-2 border border-primary" src="{{request.user.profile_picture.url}}" alt="" width="40"/>
+                </div>
+            </div>`;
+            // Scroll down to the bottom of the page on new messages
+            const box = document.querySelector(".chatbox");
+            box.scrollTop = box.scrollHeight;
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+
+    </script>
+
         {% endblock content %}
