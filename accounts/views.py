@@ -308,6 +308,7 @@ def AccountChat(request, pk):
                 'messages_obj':page_obj.object_list,
                 'page_obj': page_obj,
                 'receiverUser' : receiverUser,
+                'home': False,
                 'chat_rooms': userChatRooms
                 }
             return render(request=request, template_name='account-Chat.html', context=context)
@@ -321,4 +322,13 @@ def AccountChat(request, pk):
 @login_required
 def AccountChats(request):
     user = request.user
-    return render(request=request, template_name='account-Chat.html', context={"room_name": user.email, 'user':user.email})
+    userChatRooms = user.chat_rooms.all()
+    try:
+        context = {
+            'user':user,
+            'chat_rooms': userChatRooms,
+            'home': True
+            }
+        return render(request=request, template_name='account-Chat.html', context=context)
+    except Exception as e:
+        print(e)
