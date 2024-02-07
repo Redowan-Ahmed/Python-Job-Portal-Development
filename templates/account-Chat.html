@@ -44,6 +44,7 @@
             box-shadow: -2px 2px 11px 0px #e7e7e7;
             margin: 10px 0px;
             max-width: 80%;
+            overflow: hidden;
         }
 
         .receiverMessage div{
@@ -54,6 +55,7 @@
             box-shadow: -2px 2px 11px 0px #e7e7e7;
             margin: 10px 0px;
             max-width: 80%;
+            overflow: hidden;
         }
         .senderMessage > div > span, .receiverMessage > div > span{
             color: #000;
@@ -86,21 +88,50 @@
                         <div style="height: 90vh;" class="row shadow rounded-3 ">
                             <div style="border-right: 1px solid #dfdfdf; overflow-y: scroll;" class="col-md-4 h-100 p-0">
                                 <ul class="list-unstyled">
+                                {% for chat_room in chat_rooms %}
                                     <li>
-                                        <a href="#" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/' %} mactivate {% endif %}">
-                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="http://127.0.0.1:8000/uploads/profile_pictures/android-chrome-512x512.png"></img>
-                                            <span>Dashboard</span>
+                                        <a href="{% url 'message' chat_room.pk %}" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/{{chat_room.pk}}/' %} mactivate {% endif %}">
+
+                                            {% with chatf=chat_room.users.all.first %}
+                                                {% with chatl=chat_room.users.all.last %}
+                                                    {% if chatf == user %}
+
+                                            {% if chatl.profile_picture %}
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="{{chatl.profile_picture.url}}"></img>
+                                            {% else %}
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                            {% endif %}
+                                            <span>{{chatl.get_full_name}}</span>
+
+
+                                                    {% else %}
+                                {% if chatf.profile_picture %}
+                                <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="{{chatf.profile_picture.url}}"></img>
+                                {% else %}
+                                <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                {% endif %}
+                                <span>{{chatf.get_full_name}}</span>
+                                                    {% endif %}
+                                                {% endwith %}
+                                            {% endwith %}
+
                                         </a>
                                     </li>
+                                {% endfor %}
+
                                 </ul>
                             </div>
                             <div id="chatSide" class="col-md-8 h-100 p-0 position-relative">
                                 <div class="position-sticky top-0 w-100 bg-white">
                                     <div id="headChat" class="d-flex d-flex align-items-center justify-content-between px-3 py-3 fw-bold">
                                         <div class="d-flex align-items-center gap-3">
+                                        {% if receiverUser.profile_picture %}
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="{{receiverUser.profile_picture.url}}"></img>
+                                        {% else %}
                                             <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="http://127.0.0.1:8000/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                        {% endif %}
                                             <div>
-                                                <span>Dashboard</span>
+                                                <span class="text-black">{{receiverUser.get_full_name}}</span>
                                             </div>
                                         </div>
                                         <div class="block">
@@ -157,10 +188,11 @@
         {% include './components/footer.html' %}
 
         {{ room_name|json_script:"room-name" }}
-        {{ user|json_script:"user" }}
+        {{ user.pk|json_script:"user" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
         const user = JSON.parse(document.getElementById('user').textContent);
+        const audio = new Audio("https://www.fesliyanstudios.com/play-mp3/387");
 
         const chatSocket = new WebSocket(
             'ws://'
@@ -184,6 +216,8 @@
         })
         chatSocket.onopen = (e)=>{
             console.log("Websocket opened!");
+            const box = document.querySelector("#chatSide");
+            box.scrollTop = box.scrollHeight;
         }
 
 
@@ -214,8 +248,8 @@
                 document.querySelector('.chatbox').innerHTML += reciverMessage
             }else{
                 document.querySelector('.chatbox').innerHTML += senderMessage
+                audio.play()
             }
-
 
             // Scroll down to the bottom of the page on new messages
             const box = document.querySelector("#chatSide");

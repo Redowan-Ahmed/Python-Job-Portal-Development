@@ -58,8 +58,8 @@ class TestModel(BaseModel):
 
 
 class MessageRoom(BaseModel):
-    user1 = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='rooms')
-    user2 = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='rooms_user2')
+    users = models.ManyToManyField(to=get_user_model(), related_name='chat_rooms', blank=True)
+    room_name = models.CharField(max_length=100, blank=True, default='Privet')
 
     def __str__(self):
         return f'{self.pk}'

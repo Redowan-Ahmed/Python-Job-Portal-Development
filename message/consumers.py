@@ -12,9 +12,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.user = str(object=route).split(sep='&')[1]
         self.room_obj = await MessageRoom.objects.aget(pk = self.room_name)
         self.user_obj = await User.objects.aget(pk = self.user)
-        self.user2 = await sync_to_async(func=lambda: self.room_obj.user2)()
-        self.user1 = await sync_to_async(func=lambda: self.room_obj.user1)()
-        if self.user1 == self.user_obj or self.user2 == self.user_obj:
+        self.user_in_room = await self.room_obj.users.all().acontains(obj=self.user_obj)
+        if self.user_in_room:
             # Join room group
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
             await self.accept()

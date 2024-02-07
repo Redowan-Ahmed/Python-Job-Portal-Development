@@ -11,7 +11,7 @@ from candidates.models import FavoriteJob
 from django.db import transaction
 from django.core.paginator import Paginator
 from message.models import Message, RoomMessage
-from django.db.models import Avg, Max, Min, Count
+from django.db.models import Avg, Max, Min, Count, Q
 
 from hr.forms import CompanyForm, CompanyFormEdit
 from message.models import MessageRoom
@@ -290,16 +290,27 @@ def savedJobs(request):
 @login_required
 def AccountChat(request, pk):
     user = request.user
+    userChatRooms = user.chat_rooms.all()
     room_obj = MessageRoom.objects.get(pk = pk)
-    if user == room_obj.user1 or user == room_obj.user2 :
+    room_obj_users = room_obj.users.all()
+    if user in room_obj_users:
+        receiverUser = room_obj_users.exclude(pk__contains=[user.pk]).first()
         messages_obj = RoomMessage.objects.filter(room = room_obj).order_by( 'created_at' )
+        # message_list_obj = RoomMessage.objects.filter(Q())
+        # print(message_list_obj)
         page:int = request.GET.get('page')
         try:
-            pagination = Paginator(object_list=messages_obj, per_page=6)
-            if not page:
-                page = 0
-            page_obj = pagination.get_page(number=page)
-            return render(request=request, template_name='account-Chat.html', context={"room_name": pk, 'user':user.pk, 'messages_obj':messages_obj, 'page_obj': page_obj})
+            pagination = Paginator(object_list=messages_obj, per_page=10)
+            page_obj = pagination.get_page(number=0)
+            context = {
+                "room_name": pk,
+                'user':user,
+                'messages_obj':page_obj.object_list,
+                'page_obj': page_obj,
+                'receiverUser' : receiverUser,
+                'chat_rooms': userChatRooms
+                }
+            return render(request=request, template_name='account-Chat.html', context=context)
         except Exception as e:
             print(e)
     else:
