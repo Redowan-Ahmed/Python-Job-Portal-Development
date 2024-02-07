@@ -40,7 +40,7 @@
             display: inline-block;
             padding: 10px 20px;
             background-color: rgba(246, 249, 255, 0.361);
-            border-radius: 10px 10px 10px 0px;
+            border-radius: 15px 15px 15px 0px;
             box-shadow: -2px 2px 11px 0px #e7e7e7;
             margin: 10px 0px;
             max-width: 80%;
@@ -51,7 +51,7 @@
             display: inline-block;
             padding: 10px 20px;
             background-color: rgba(176, 201, 255, 0.361);
-            border-radius: 10px 10px 0px 10px;
+            border-radius: 15px 15px 0px 15px;
             box-shadow: -2px 2px 11px 0px #e7e7e7;
             margin: 10px 0px;
             max-width: 80%;
@@ -88,7 +88,13 @@
                                 <ul class="list-unstyled">
                                 {% for chat_room in chat_rooms %}
                                     <li>
-                                    <a href="{% url 'message' chat_room.pk %}" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/{{chat_room.pk}}/' %} mactivate {% endif %}">
+                                    {% if chat_room.is_group %}
+                                        <a href="{% url 'message' chat_room.pk %}" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/{{chat_room.pk}}/' %} mactivate {% endif %}">
+                                            <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                            <span>{{chat_room.room_name}}</span>
+                                        </a>
+                                        {% else %}
+                                        <a href="{% url 'message' chat_room.pk %}" id="chatUser" class="d-flex align-items-center gap-3 p-3 text-black fw-bold {% if request.META.PATH_INFO == '/dashboard/messages/{{chat_room.pk}}/' %} mactivate {% endif %}">
 
                                             {% with chatf=chat_room.users.all.first %}
                                                 {% with chatl=chat_room.users.all.last %}
@@ -114,9 +120,10 @@
                                             {% endwith %}
 
                                         </a>
+                            {% endif %}
+
                                     </li>
                                 {% endfor %}
-
                                 </ul>
                             </div>
                             <div id="chatSide" class="col-md-8 h-100 p-0 position-relative">
@@ -126,8 +133,16 @@
                                     <h4 class="text-center py-5">No chat started yet.</h4>
                                 </div>
                             {% else %}
-                                <div class="position-sticky top-0 w-100 bg-white">
+                                <div style="z-index: 99;" class="position-sticky top-0 w-100 bg-white">
                                     <div id="headChat" class="d-flex d-flex align-items-center justify-content-between px-3 py-3 fw-bold">
+                                        {% if room.is_group %}
+                                        <div class="d-flex align-items-center gap-3">
+                                                <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="http://127.0.0.1:8000/uploads/profile_pictures/android-chrome-512x512.png"></img>
+                                                <div>
+                                                    <span class="text-black">{{room.room_name}}</span>
+                                                </div>
+                                            </div>
+                                        {% else %}
                                         <div class="d-flex align-items-center gap-3">
                                         {% if receiverUser.profile_picture %}
                                             <img class='rounded-circle border border-2 border-primary' width="50px" height="50px" src="{{receiverUser.profile_picture.url}}"></img>
@@ -138,6 +153,7 @@
                                                 <span class="text-black">{{receiverUser.get_full_name}}</span>
                                             </div>
                                         </div>
+                                    {% endif %}
                                         <div class="block">
                                             <a href="{% url 'account' %}" class="btn btn-primary">Dashboard</a>
                                             <button class="btn btn-danger">Block</button>
@@ -145,6 +161,45 @@
                                     </div>
                                 </div>
                                 <div class="chatbox">
+                                    {% if page_obj.has_other_pages %}
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination justify-content-center">
+
+                                        {% if page_obj.has_previous %}
+
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                        href="?page={{page_obj.previous_page_number}}"
+                                                        tabindex="-{{page_obj.previous_page_number}}">
+                                                    <i class='bx bx-chevrons-left bx-fade-left'></i>
+                                                </a>
+                                            </li>
+                                            {% else %}
+                                            <li class="page-item disabled">
+                                            </li>
+                                            {% endif %}
+                                            {% if page_obj.has_other_pages %}
+                                                {% for page in page_obj.paginator %}
+                                                    <li class="page-item"><a class="page-link {% if page_obj.number == page.number %} bg-primary text-white {% endif %}"
+                                                        href="?page={{page.number}}"
+                                                        >{{page.number}}</a></li>
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if page_obj.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link"
+                                                        href="?page={{page_obj.next_page_number}}"
+                                                    >
+                                                        <i class='bx bx-chevrons-right bx-fade-right'></i>
+                                                    </a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                    {% endif %}
                                 {% for message in messages_obj %}
 
                                     {% if message.messenger == request.user %}

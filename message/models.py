@@ -60,9 +60,10 @@ class TestModel(BaseModel):
 class MessageRoom(BaseModel):
     users = models.ManyToManyField(to=get_user_model(), related_name='chat_rooms', blank=True)
     room_name = models.CharField(max_length=100, blank=True, default='Privet')
+    is_group = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
-        return f'{self.pk}'
+        return f'{self.pk} ({self.room_name})'
 
 class RoomMessage(BaseModel):
     room = models.ForeignKey(MessageRoom, on_delete=models.CASCADE, related_name="messages")
@@ -70,4 +71,7 @@ class RoomMessage(BaseModel):
     body = models.TextField(blank=True)
 
     def __str__(self):
-        return f'{self.room.pk}'
+        return f'{self.room.pk } ({self.room.room_name})'
+
+    class Meta:
+        ordering = ('created_at',)

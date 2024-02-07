@@ -1,4 +1,5 @@
 from datetime import date
+from email.policy import default
 from django.shortcuts import redirect, render
 from allauth.account.views import LoginView, SignupView
 from hr.models import JobCategory, Company, JobPost
@@ -295,21 +296,25 @@ def AccountChat(request, pk):
     room_obj_users = room_obj.users.all()
     if user in room_obj_users:
         receiverUser = room_obj_users.exclude(pk__contains=[user.pk]).first()
-        messages_obj = RoomMessage.objects.filter(room = room_obj).order_by( 'created_at' )
+        messages_obj = RoomMessage.objects.filter(room = room_obj).order_by('-created_at')
         # message_list_obj = RoomMessage.objects.filter(Q())
         # print(message_list_obj)
         page:int = request.GET.get('page')
         try:
+            if not page :
+                page = 1
             pagination = Paginator(object_list=messages_obj, per_page=10)
-            page_obj = pagination.get_page(number=0)
+            page_obj = pagination.get_page(number=page)
+            reversedList = list(reversed(page_obj.object_list))
             context = {
                 "room_name": pk,
                 'user':user,
-                'messages_obj':page_obj.object_list,
+                'messages_obj':reversedList,
                 'page_obj': page_obj,
                 'receiverUser' : receiverUser,
                 'home': False,
-                'chat_rooms': userChatRooms
+                'chat_rooms': userChatRooms,
+                'room': room_obj
                 }
             return render(request=request, template_name='account-Chat.html', context=context)
         except Exception as e:
