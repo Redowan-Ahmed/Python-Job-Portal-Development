@@ -82,10 +82,8 @@
         <section class="account-section py-5">
             <div class="container">
                 <div class="row">
-                <!-- {% include "./components/accountSidebar.html" %} -->
                     <div class="col-md-12">
-                        <!-- <h3>Fill the form to post a job</h3> -->
-                        <div style="height: 90vh;" class="row shadow rounded-3 ">
+                        <div style="height: 80vh;" class="row shadow rounded-3 ">
                             <div style="border-right: 1px solid #dfdfdf; overflow-y: scroll;" class="col-md-4 h-100 p-0">
                                 <ul class="list-unstyled">
                                 {% for chat_room in chat_rooms %}
@@ -158,13 +156,23 @@
                                                 <small>{{message.created_at}}</small>
                                             </div>
                                             <div class="rounded-circle p-0 shadow-none">
+
+                                                {% if message.messenger.profile_picture %}
                                                 <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
+                                                {% else %}
+                                                <img class="rounded-circle border-2 border border-primary" src="/static/assets/img/account.jpg" alt="" height="40px" width="40px"/>
+                                                {% endif %}
+
                                             </div>
                                         </div>
                                         {% else %}
                                         <div class="senderMessage">
                                             <div class="rounded-circle p-0 shadow-none">
+                                                {% if message.messenger.profile_picture %}
                                                 <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
+                                                {% else %}
+                                                <img class="rounded-circle border-2 border border-primary" src="/static/assets/img/account.jpg" alt="" height="40px" width="40px"/>
+                                                {% endif %}
                                             </div>
                                             <div>
                                                 <span>{{message.body}}</span>
@@ -183,7 +191,6 @@
                                         <button id="submitI" class="btn btn-primary w-25 h-auto" type="submit">Send</button>
                                     </form>
                                 </div>
-
                             {% endif %}
 
                             </div>

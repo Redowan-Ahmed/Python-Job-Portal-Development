@@ -33,9 +33,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user_obj = await User.objects.aget(pk = user)
         message_obj = await RoomMessage.objects.acreate(room = self.room_obj, messenger = user_obj, body = message)
         date = str(object=f'{message_obj.created_at.date()} {message_obj.created_at.time()}')
+        picture = '/static/assets/img/account.jpg'
+        if user_obj.profile_picture:
+            picture = str(object=user_obj.profile_picture.url)
         # Send message to room group
         await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat_message", "message": message, 'user': user, 'send_at':date,'user_profile_picture':str(object=user_obj.profile_picture.url) }
+            self.room_group_name, {"type": "chat_message", "message": message, 'user': user, 'send_at':date,'user_profile_picture':str(object=picture) }
         )
 
     # Receive message from room group
