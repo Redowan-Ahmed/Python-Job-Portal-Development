@@ -10,10 +10,11 @@ from django.shortcuts import get_object_or_404, resolve_url
 from candidates.models import FavoriteJob
 from django.db import transaction
 from django.core.paginator import Paginator
-from message.models import Message
+from message.models import Message, RoomMessage
 from django.db.models import Avg, Max, Min, Count
 
 from hr.forms import CompanyForm, CompanyFormEdit
+from message.models import MessageRoom
 
 # Create your views here.
 
@@ -289,18 +290,24 @@ def savedJobs(request):
 @login_required
 def AccountChat(request, pk):
     user = request.user
-    messages = Message.get_message(user=user)
-    active_direct = pk
-    # directs = Message.objects.filter(user= user, receiver__pk = pk )
-    print(messages)
-    print(pk)
-    return render(request=request, template_name='account-Chat.html', context={"room_name": pk})
+    room_obj = MessageRoom.objects.get(pk = pk)
+    if user == room_obj.user1 or user == room_obj.user2 :
+        messages_obj = RoomMessage.objects.filter(room = room_obj).order_by( 'created_at' )
+        page:int = request.GET.get('page')
+        try:
+            pagination = Paginator(object_list=messages_obj, per_page=6)
+            if not page:
+                page = 0
+            page_obj = pagination.get_page(number=page)
+            return render(request=request, template_name='account-Chat.html', context={"room_name": pk, 'user':user.pk, 'messages_obj':messages_obj, 'page_obj': page_obj})
+        except Exception as e:
+            print(e)
+    else:
+        messages.warning(request= request, message='You are not allowed to view this chat!')
+        return redirect(to='account')
+    # return render(request=request, template_name='account-Chat.html', context={"room_name": pk, 'user':user.pk})
 
 @login_required
 def AccountChats(request):
     user = request.user
-    messages = Message.get_message(user=user)
-    directs = Message.objects.filter(user= user)
-    print(messages)
-    print(directs)
-    return render(request=request, template_name='account-Chat.html')
+    return render(request=request, template_name='account-Chat.html', context={"room_name": user.email, 'user':user.email})

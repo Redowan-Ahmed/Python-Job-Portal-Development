@@ -110,31 +110,40 @@
                                     </div>
                                 </div>
                                 <div class="chatbox">
-                                    <div class="senderMessage">
-                                        <div class="rounded-circle p-0 shadow-none">
-                                            <img class="rounded-circle border-2 border border-primary" src="{{request.user.profile_picture.url}}" alt="" width="40"/>
+                                {% for message in messages_obj %}
+
+                                    {% if message.messenger == request.user %}
+
+                                        <div class="receiverMessage">
+                                            <div>
+                                                <span>{{message.body}}</span>
+                                                <br/>
+                                                <small>{{message.created_at}}</small>
+                                            </div>
+                                            <div class="rounded-circle p-0 shadow-none">
+                                                <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <span> Hi, Redowan. How are you?</span>
-                                            <br/>
-                                            <small>10/10/2024</small>
+                                        {% else %}
+                                        <div class="senderMessage">
+                                            <div class="rounded-circle p-0 shadow-none">
+                                                <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
+                                            </div>
+                                            <div>
+                                                <span>{{message.body}}</span>
+                                                <br/>
+                                                <small>{{message.created_at}}</small>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="receiverMessage">
-                                        <div>
-                                            <span> Hi, Redowan. How are you?</span>
-                                            <br/>
-                                            <small>10/10/2024</small>
-                                        </div>
-                                        <div class="rounded-circle p-0 shadow-none">
-                                            <img class="rounded-circle border-2 border border-primary" src="{{request.user.profile_picture.url}}" alt="" width="40"/>
-                                        </div>
-                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+
+
                                 </div>
                                 <div class="chatForm position-sticky bottom-0 w-100">
                                     <form id="sendMessageForm" class="d-flex p-3 gap-3">
                                         <input id="inputmessage" class="form-control w-75" type="text" name="message" placeholder="Type your message..." required> </input>
-                                        <input id="submitI" class="btn btn-primary w-25 h-auto" type="submit" placeholder="Submit"/>
+                                        <button id="submitI" class="btn btn-primary w-25 h-auto" type="submit">Send</button>
                                     </form>
                                 </div>
                             </div>
@@ -148,14 +157,16 @@
         {% include './components/footer.html' %}
 
         {{ room_name|json_script:"room-name" }}
+        {{ user|json_script:"user" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const user = JSON.parse(document.getElementById('user').textContent);
 
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
             + '/ws/chat/'
-            + roomName
+            + roomName+'&'+ user
             + '/'
         );
 
@@ -164,29 +175,50 @@
             const messageInputDom = document.querySelector('#inputmessage');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
+                'user': user,
             }));
             messageInputDom.value = '';
-            const box = document.querySelector(".chatbox");
-            box.scrollTop = box.scrollHeight;
+            //const box = document.querySelector("#chatSide");
+            //box.scrollTop = box.scrollHeight;
         })
+        chatSocket.onopen = (e)=>{
+            console.log("Websocket opened!");
+        }
 
 
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
-            document.querySelector('.chatbox').innerHTML +=
-            `<div class="receiverMessage">
+            console.log(data)
+            const reciverMessage = `<div class="receiverMessage">
                 <div>
                     <span> ${data.message}</span>
                     <br/>
-                    <small>10/10/2024</small>
+                    <small>${data.send_at}</small>
                 </div>
                 <div class="rounded-circle p-0 shadow-none">
-                    <img class="rounded-circle border-2 border border-primary" src="{{request.user.profile_picture.url}}" alt="" width="40"/>
+                    <img class="rounded-circle border-2 border border-primary" src="${data.profile}" alt="" height="40px" width="40px"/>
                 </div>
             </div>`;
+            const senderMessage = `<div class="senderMessage">
+                <div class="rounded-circle p-0 shadow-none">
+                    <img class="rounded-circle border-2 border border-primary" src="${data.profile}" alt="" height="40px" width="40px"/>
+                </div>
+                <div>
+                    <span>${data.message}</span>
+                    <br/>
+                    <small>${data.send_at}</small>
+                </div>
+            </div>`
+            if (data.user == user){
+                document.querySelector('.chatbox').innerHTML += reciverMessage
+            }else{
+                document.querySelector('.chatbox').innerHTML += senderMessage
+            }
+
+
             // Scroll down to the bottom of the page on new messages
-            const box = document.querySelector(".chatbox");
+            const box = document.querySelector("#chatSide");
             box.scrollTop = box.scrollHeight;
         };
 

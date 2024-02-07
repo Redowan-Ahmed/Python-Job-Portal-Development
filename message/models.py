@@ -7,7 +7,7 @@ from django_cryptography.fields import encrypt
 
 class Message(BaseModel):
     user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name='messages')
+        get_user_model(), on_delete=models.CASCADE, related_name='messag')
     sender = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name='from_user')
     receiver = models.ForeignKey(
@@ -55,3 +55,19 @@ class TestModel(BaseModel):
 
     def __str__(self):
         return self.name
+
+
+class MessageRoom(BaseModel):
+    user1 = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='rooms')
+    user2 = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='rooms_user2')
+
+    def __str__(self):
+        return f'{self.pk}'
+
+class RoomMessage(BaseModel):
+    room = models.ForeignKey(MessageRoom, on_delete=models.CASCADE, related_name="messages")
+    messenger = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='messages')
+    body = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.room.pk}'
