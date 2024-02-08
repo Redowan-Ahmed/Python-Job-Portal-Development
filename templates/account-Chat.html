@@ -42,7 +42,7 @@
             background-color: rgba(246, 249, 255, 0.361);
             border-radius: 15px 15px 15px 0px;
             box-shadow: -2px 2px 11px 0px #e7e7e7;
-            margin: 10px 0px;
+            margin: 20px 0px;
             max-width: 80%;
             overflow: hidden;
         }
@@ -53,7 +53,7 @@
             background-color: rgba(176, 201, 255, 0.361);
             border-radius: 15px 15px 0px 15px;
             box-shadow: -2px 2px 11px 0px #e7e7e7;
-            margin: 10px 0px;
+            margin: 20px 0px;
             max-width: 80%;
             overflow: hidden;
         }
@@ -72,6 +72,9 @@
         }
         #headChat{
             border-bottom: 1px solid #e1e1e1;
+        }
+        .user{
+            margin: 0px!important;
         }
     </style>
 {% endblock meta %}
@@ -156,7 +159,7 @@
                                     {% endif %}
                                         <div class="block">
                                             <a href="{% url 'account' %}" class="btn btn-primary">Dashboard</a>
-                                            <button class="btn btn-danger">Block</button>
+                                            <!-- <button class="btn btn-danger">Block</button> -->
                                         </div>
                                     </div>
                                 </div>
@@ -202,7 +205,7 @@
                                     {% endif %}
                                 {% for message in messages_obj %}
 
-                                    {% if message.messenger == request.user %}
+                                    {% if message.messenger == user %}
 
                                         <div class="receiverMessage">
                                             <div>
@@ -210,7 +213,7 @@
                                                 <br/>
                                                 <small>{{message.created_at}}</small>
                                             </div>
-                                            <div class="rounded-circle p-0 shadow-none">
+                                            <div class="user rounded-circle p-0 shadow-none">
 
                                                 {% if message.messenger.profile_picture %}
                                                 <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
@@ -222,7 +225,7 @@
                                         </div>
                                         {% else %}
                                         <div class="senderMessage">
-                                            <div class="rounded-circle p-0 shadow-none">
+                                            <div class="user rounded-circle p-0 shadow-none">
                                                 {% if message.messenger.profile_picture %}
                                                 <img class="rounded-circle border-2 border border-primary" src="{{message.messenger.profile_picture.url}}" alt="" height="40px" width="40px"/>
                                                 {% else %}
@@ -266,7 +269,7 @@
         <script async type="text/javascript">
             const roomName = JSON.parse(document.getElementById('room-name').textContent);
             const user = JSON.parse(document.getElementById('user').textContent);
-            const audio = new Audio("https://www.fesliyanstudios.com/play-mp3/387");
+            const audio = new Audio("/static/tune/message.mp3");
             const chatSocket = new WebSocket(
                 'ws://'
                 + window.location.host
@@ -294,24 +297,25 @@
             chatSocket.onmessage = function(e) {
                 const data = JSON.parse(e.data);
                 console.log(data)
+                const receivedAt = String(data.send_at).split('.')[0];
                 const reciverMessage = `<div class="receiverMessage">
                     <div>
                         <span> ${data.message}</span>
                         <br/>
-                        <small>${data.send_at}</small>
+                        <small>${receivedAt.split(' ')[0]+ ', ' + receivedAt.split(' ')[1]}</small>
                     </div>
-                    <div class="rounded-circle p-0 shadow-none">
-                        <img class="rounded-circle border-2 border border-primary" src="${data.profile}" alt="" height="40px" width="40px"/>
+                    <div class="rounded-circle p-0 shadow-none user">
+                        <img class="rounded-circle border-2 border border-primary " src="${data.profile}" alt="" height="40px" width="40px"/>
                     </div>
                 </div>`;
                 const senderMessage = `<div class="senderMessage">
-                    <div class="rounded-circle p-0 shadow-none">
-                        <img class="rounded-circle border-2 border border-primary" src="${data.profile}" alt="" height="40px" width="40px"/>
+                    <div class="rounded-circle p-0 shadow-none user" >
+                        <img class="rounded-circle border-2 border border-primary " src="${data.profile}" alt="" height="40px" width="40px"/>
                     </div>
                     <div>
                         <span>${data.message}</span>
                         <br/>
-                        <small>${data.send_at}</small>
+                        <small>${receivedAt.split(' ')[0]+ ', ' + receivedAt.split(' ')[1]}</small>
                     </div>
                 </div>`
                 if (data.user == user){

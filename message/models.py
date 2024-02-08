@@ -69,6 +69,7 @@ class RoomMessage(BaseModel):
     room = models.ForeignKey(MessageRoom, on_delete=models.CASCADE, related_name="messages")
     messenger = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='messages')
     body = models.TextField(blank=True)
+    is_deleted = models.BooleanField(default=False, blank=True)
 
     def __str__(self):
         return f'{self.room.pk } ({self.room.room_name})'

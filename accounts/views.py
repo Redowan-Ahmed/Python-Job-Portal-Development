@@ -1,4 +1,5 @@
 from datetime import date
+import datetime
 from email.policy import default
 from django.shortcuts import redirect, render
 from allauth.account.views import LoginView, SignupView
@@ -285,18 +286,19 @@ def CompanyEdit(request, pk):
 def savedJobs(request):
     jobs = request.user.loved_jobs.all().order_by('-created_at')
     print(jobs)
-    return render(request, 'account-company.html')
+    return render(request=request, template_name='account-company.html')
 
 
 @login_required
 def AccountChat(request, pk):
     user = request.user
-    userChatRooms = user.chat_rooms.all()
-    room_obj = MessageRoom.objects.get(pk = pk)
+    userChatRooms = user.chat_rooms.all().order_by('-updated_at')
+
+    room_obj = MessageRoom.objects.prefetch_related('users','messages').get(pk = pk)
     room_obj_users = room_obj.users.all()
     if user in room_obj_users:
         receiverUser = room_obj_users.exclude(pk__contains=[user.pk]).first()
-        messages_obj = RoomMessage.objects.filter(room = room_obj).order_by('-created_at')
+        messages_obj = RoomMessage.objects.select_related('room','messenger').filter(room = room_obj).order_by('-created_at')
         # message_list_obj = RoomMessage.objects.filter(Q())
         # print(message_list_obj)
         page:int = request.GET.get('page')
@@ -327,7 +329,7 @@ def AccountChat(request, pk):
 @login_required
 def AccountChats(request):
     user = request.user
-    userChatRooms = user.chat_rooms.all()
+    userChatRooms = user.chat_rooms.all().order_by('-updated_at')
     try:
         context = {
             'user':user,

@@ -10,16 +10,16 @@ from accounts.models import User, CandidateProfile
 from hr.models import JobCategory, JobPost, Company
 from datetime import date
 from django.shortcuts import get_object_or_404
-from django.db.models import Q, Avg, Max, Min, F
+from django.db.models import Q, Avg, Max, Min, F, Count
 from candidates.models import FavoriteJob
 
 
 currentDate: date = date.today()
 
 def index(request):
-    categories = JobCategory.objects.prefetch_related('jobs').filter(featured = True)[:8]
+    categories = JobCategory.objects.prefetch_related('jobs').annotate(jobCount = Count('jobs')).filter(featured = True).order_by('-jobCount')[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
-    companies = Company.objects.select_related('user').prefetch_related('jobs').all()[:4]
+    companies = Company.objects.select_related('user').prefetch_related('jobs').annotate(jobCount = Count('jobs')).all().order_by('-jobCount')[:4]
     posts = BlogPost.objects.select_related('category','author').prefetch_related('likes').filter(status='Published').order_by('-created_at')[:3]
     loved_jobs = []
     featured_candidates = [1,2,3,4,5,6,7,8,9]
@@ -206,7 +206,7 @@ def BlogDetails(request, slug):
         else:
             try:
                 categories = Category.objects.prefetch_related('posts').all()
-                related_posts = BlogPost.objects.select_related('author','category').filter(Q(category = blog.category) | Q(tags__icontains = blog.tags)).exclude(slug=slug)[:4]
+                related_posts = BlogPost.objects.prefetch_related('comments').select_related('author','category').annotate(top_commented = Count('comments')).filter(Q(category = blog.category) | Q(tags__icontains = blog.tags)).exclude(slug=slug).order_by('-top_commented')[:4]
                 tags = blog.tags
                 comments = blog.comments.select_related('user','reply', 'post').prefetch_related('replies').all().order_by('created_at')
                 likes = blog.likes.select_related('user','post').all()

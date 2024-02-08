@@ -4,8 +4,8 @@ from django.contrib.auth.admin import UserAdmin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 
 
-admin.site.register(HrProfile)
-admin.site.register(CandidateProfile)
+admin.site.register(model_or_iterable=HrProfile)
+admin.site.register(model_or_iterable=CandidateProfile)
 
 
 class CustomUserAdmin(UserAdmin):
