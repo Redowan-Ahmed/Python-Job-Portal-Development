@@ -173,7 +173,7 @@
                       {% if user.is_authenticated %}
                       <form action="{% url 'loved_job' job.pk %}" method="post">
                         {% csrf_token %}
-                        <button type="submit">
+                        <button id="saveB" type="submit">
                           {% if job in loved_jobs %}
                             <a title="Marked as favorite">
                               <i class='bx bx-heart bg-danger text-white'></i>

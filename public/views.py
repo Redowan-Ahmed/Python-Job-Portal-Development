@@ -1,6 +1,5 @@
-from colorama import init
 from django.core.paginator import Paginator
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from .models import SupportContact, BlogPost, Category, Comment
 from django.contrib import messages
@@ -12,11 +11,16 @@ from datetime import date
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Avg, Max, Min, F, Count
 from candidates.models import FavoriteJob
+from django.views.decorators.cache import cache_page
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from PIL import Image
 
 
 currentDate: date = date.today()
 
+@cache_page(60 * 15)
 def index(request):
+    user = request.user
     categories = JobCategory.objects.prefetch_related('jobs').annotate(jobCount = Count('jobs')).filter(featured = True).order_by('-jobCount')[:8]
     jobs = JobPost.objects.select_related('user','job_category','company').filter(last_date_of_apply__gte = currentDate)[:6]
     companies = Company.objects.select_related('user').prefetch_related('jobs').annotate(jobCount = Count('jobs')).all().order_by('-jobCount')[:4]
@@ -24,7 +28,6 @@ def index(request):
     loved_jobs = []
     featured_candidates = [1,2,3,4,5,6,7,8,9]
     testimonials = [1,2,3,4]
-    user = request.user
     if user.is_authenticated:
         favorites = user.loved_jobs.select_related('job').all()
         for favorite in favorites:
@@ -94,7 +97,7 @@ def CategorizedJobs(request, category):
         print("Error in categorized jobs", str(object=e))
         raise Http404('page is not found')
 
-
+@cache_page(60 * 15)
 def Jobs(request):
     if request.GET.get('keyword') and request.GET.get('location'):
         try:
@@ -237,13 +240,54 @@ def ApplyJob(request, pk):
 
 @login_required
 def JobFavorite(request, pk):
-    if request.POST:
+    if request.method == 'POST':
+        response = {}
         candidate = CandidateProfile.objects.filter(user = request.user)
         if candidate.exists():
             loved, created = FavoriteJob.objects.get_or_create(user= request.user, job_id= pk)
             #print('created', created , ' ', 'loved', loved)
             if not created:
                 loved.delete()
-        return redirect(request.META.get('HTTP_REFERER'))
+            response = {
+                "status": 201,
+                "message": "Job Favorited" if created else "Job Removed from Favorites",
+                "isLoved": True if created else False,
+            }
+        else:
+            # messages.error(request=request,message="You're not a Candidate to add this job to Favorites")
+            response = {
+                'status': 302,
+                'message': "You're not a Candidate to add this job to Favorites"
+            }
+
+        return JsonResponse(data=response)
+        # return redirect(request.META.get('HTTP_REFERER'))
     else:
-        return redirect(request.META.get('HTTP_REFERER'))
+        # messages.error(request=request,message="Something went wrong! Please try again.")
+        return JsonResponse(data={
+                "status": 404,
+                "message": "Something went wrong",
+            })
+        # return redirect(request.META.get('HTTP_REFERER'))
+
+
+#Test
+
+
+def test(request):
+
+    model_id = "vikhyatk/moondream2"
+    revision = "2024-03-06"
+    model = AutoModelForCausalLM.from_pretrained(
+        model_id, trust_remote_code=True, revision=revision
+    )
+    tokenizer = AutoTokenizer.from_pretrained(model_id, revision=revision)
+
+    image = Image.open('<IMAGE_PATH>')
+    enc_image = model.encode_image(image)
+    print(model.answer_question(enc_image, "Describe this image.", tokenizer))
+
+    return JsonResponse(data={
+                "status": 404,
+                "message": "Something went wrong",
+            })

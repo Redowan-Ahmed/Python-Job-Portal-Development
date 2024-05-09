@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from public.views import index, AboutUs, Contact, Jobs, JobDetails, CategorizedJobs, BlogDetails, Blogs, ApplyJob, JobFavorite
+from public.views import index, AboutUs, Contact, Jobs, JobDetails, CategorizedJobs, BlogDetails, Blogs, ApplyJob, JobFavorite, test
 from accounts.views import CustomLogin, CustomSignUp, SignOut
 
 urlpatterns = [
@@ -20,8 +20,11 @@ urlpatterns = [
     path('jobs/category/<str:category>/', CategorizedJobs, name='categorized-jobs'),
     path('job/apply/<str:pk>/', ApplyJob, name='job-apply'),
     path('blogs/', Blogs, name='blogs'),
+    #Test
+    path('test/', test, name='test'),
+
     path('blogs/<slug:slug>/', BlogDetails, name='blog'),
-    path('loved_job/<str:pk>/', JobFavorite, name='loved_job'),
+    path(route='loved_job/<str:pk>/', view=JobFavorite, name='loved_job'),
 
     # Debug
     path("__debug__/", include("debug_toolbar.urls")),

@@ -80,7 +80,7 @@
 												{% if user.is_authenticated %}
 													<form action="{% url 'loved_job' job.pk %}" method="post">
 														{% csrf_token %}
-														<button type="submit">
+														<button id="saveB" type="submit">
 															{% if job in loved_jobs %}
 																<a title="Marked as favorite">
 																	<i class='bx bx-heart bg-danger text-white'></i>
@@ -210,11 +210,11 @@
                     <div class="col-md-6">
                         <form class="newsletter-form" data-toggle="validator">
                             <input type="email" class="form-control" placeholder="Enter your email" name="EMAIL" required autocomplete="off">
-    
+
                             <button class="default-btn sub-btn" type="submit">
                                 Subscribe
                             </button>
-    
+
                             <div id="validator-newsletter" class="form-result"></div>
                         </form>
                     </div>

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostJob, Account, ViewJobPosts, CompanyPost, Companies, savedJobs, AccountChat, EditJobPost, AccountChats, CompanyEdit
+from .views import PostJob, Account, ViewJobPosts, CompanyPost, Companies, savedJobs, AccountChat, EditJobPost, AccountChats, CompanyEdit, ChangePassword
 
 urlpatterns = [
     path(route='', view=Account , name='account'),
@@ -12,4 +12,5 @@ urlpatterns = [
     path(route='saved-jobs/', view=savedJobs , name='loved-jobs'),
     path(route='messages/', view=AccountChats, name="messages"),
     path(route='messages/<str:pk>/', view=AccountChat, name="message"),
+    path(route='change-password/', view=ChangePassword.as_view(), name="change-password"),
 ]

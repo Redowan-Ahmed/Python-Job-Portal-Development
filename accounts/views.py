@@ -2,7 +2,7 @@ from datetime import date
 import datetime
 from email.policy import default
 from django.shortcuts import redirect, render
-from allauth.account.views import LoginView, SignupView
+from allauth.account.views import LoginView, SignupView, PasswordChangeView
 from hr.models import JobCategory, Company, JobPost
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -14,11 +14,12 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from message.models import Message, RoomMessage
 from django.db.models import Avg, Max, Min, Count, Q
-
+from django.views.decorators.cache import cache_page
 from hr.forms import CompanyForm, CompanyFormEdit
 from message.models import MessageRoom
 
-# Create your views here.
+from pyhtml2pdf import converter
+
 
 currentDate = date.today()
 
@@ -27,8 +28,12 @@ class CustomLogin(LoginView):
 
 class CustomSignUp(SignupView):
     template_name = 'sign-up.html'
-def SignUp(request):
-    return render(request, 'sign-up.html')
+
+class ChangePassword(PasswordChangeView):
+    template_name = 'account-passwordChange.html'
+
+""" def SignUp(request):
+    return render(request=request, template_name='sign-up.html') """
 
 
 def SignIn(request):
@@ -62,6 +67,7 @@ def SignOut(request):
 
 
 @login_required
+@cache_page(60 * 15)
 def Account(request):
     #print(request.user.hr_profile)
     if request.user.is_hr:
@@ -71,13 +77,16 @@ def Account(request):
         #     print(data)
         #     return f'{data} Working'
         context = {
-            'total_jobs': jobs.all().count(),
-            'total_active_jobs': jobs.filter(last_date_of_apply__gte = currentDate).count(),
+            'total_jobs':  jobs.all().count(),
+            'total_active_jobs':  jobs.filter(last_date_of_apply__gte = currentDate).count(),
             'total_companies': companies,
             # 'test': textData
         }
+        data = render(request=request, template_name='account.html', context= context)
+        # converter.convert(source=data._container[0], target='sample.pdf')
         return render(request=request, template_name='account.html', context= context)
     return render(request=request, template_name='account.html')
+
 
 
 @login_required(login_url='signIn')
@@ -204,6 +213,7 @@ def EditJobPost(request, pk):
         print(e)
 
 @login_required
+@cache_page(60 * 15)
 def Companies(request):
     user = request.user
     companies = Company.objects.prefetch_related('jobs').filter(user = user).order_by('-created_at')
@@ -284,12 +294,23 @@ def CompanyEdit(request, pk):
 
 @login_required
 def savedJobs(request):
-    jobs = request.user.loved_jobs.all().order_by('-created_at')
-    print(jobs)
-    return render(request=request, template_name='account-company.html')
+    jobs = request.user.loved_jobs.select_related('job').all().order_by('-created_at')
+    page_number:int = request.GET.get('page')
+    try:
+        pagination = Paginator(object_list=jobs, per_page=6)
+        page_obj = pagination.get_page(number=page_number)
+    except Exception as e:
+        print(e)
+    context = {
+        'jobs': page_obj.object_list,
+        'today': currentDate,
+        'page_obj': page_obj
+    }
+    return render(request=request, template_name='account-loved-jobs.html', context=context)
 
 
 @login_required
+@cache_page(60 * 15)
 def AccountChat(request, pk):
     user = request.user
     userChatRooms = user.chat_rooms.all().order_by('-updated_at')
@@ -305,7 +326,7 @@ def AccountChat(request, pk):
         try:
             if not page :
                 page = 1
-            pagination = Paginator(object_list=messages_obj, per_page=10)
+            pagination = Paginator(object_list=messages_obj, per_page=50)
             page_obj = pagination.get_page(number=page)
             reversedList = list(reversed(page_obj.object_list))
             context = {
@@ -327,6 +348,7 @@ def AccountChat(request, pk):
     # return render(request=request, template_name='account-Chat.html', context={"room_name": pk, 'user':user.pk})
 
 @login_required
+@cache_page(60 * 15)
 def AccountChats(request):
     user = request.user
     userChatRooms = user.chat_rooms.all().order_by('-updated_at')
@@ -339,3 +361,11 @@ def AccountChats(request):
         return render(request=request, template_name='account-Chat.html', context=context)
     except Exception as e:
         print(e)
+
+
+def ProfileSettings(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+    return render(request=request, template_name='', context=context)

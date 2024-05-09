@@ -1,0 +1,152 @@
+{% extends './components/Base.html' %}
+
+{% block content %}
+{% include "./components/header.html" %}
+<section class="account-section ptb-100">
+    <div class="container">
+        <div class="row">
+        {% include "./components/accountSidebar.html" %}
+            <div class="col-md-8">
+                <div class="jobs ">
+                    {% if jobs %}
+                        {% for loved in jobs %}
+
+                        <div class="col-lg-12">
+                            <div class="job-card-two shadow rounded-2">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <div class="company-logo">
+                                            <a href="{% url 'job' loved.job.id %}">
+                                                <img width="100%" height="100%" class="rounded-circle object-fit" src="{{loved.job.thumbnail.url}}" alt="{{loved.job.title}}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="job-info">
+                                            <h3>
+                                                <a href="{% url 'job' loved.job.id %}">{{loved.job.title}}</a>
+                                            </h3>
+                                            <ul>
+                                                <li>
+                                                    <i class='bx bx-briefcase' ></i>
+                                                    {{loved.job.looking_position}}
+                                                </li>
+                                                <li>
+                                                    <i class='bx bx-briefcase' ></i>
+                                                    {{loved.job.salary}}
+                                                </li>
+                                                <li>
+                                                    <i class='bx bx-location-plus'></i>
+                                                    {{loved.job.address}}
+                                                </li>
+                                                <li>
+                                                    {% if loved.job.last_date_of_apply <= today %}
+                                                        <p class="text-danger">
+                                                        <i class='bx bx-stopwatch '>
+                                                        </i>
+                                                            Expired
+                                                        </p>
+                                                        {% else %}
+                                                        <p>
+                                                            <i class='bx bx-stopwatch '>
+                                                            </i>
+                                                            {{loved.job.last_date_of_apply}}
+                                                        </p>
+                                                        {% endif %}
+                                                </li>
+                                            </ul>
+                                            <span>{{loved.job.job_type}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="theme-btn text-end d-flex justify-content-end gap-3 align-content-center align-items-center ">
+                                            <a href="{% url 'job' loved.job.id %}" class="default-btn rounded-pill fw-bolder">
+                                                view
+                                            </a>
+                                            {% if user.is_authenticated %}
+													<form action="{% url 'loved_job' loved.job.pk %}" method="post">
+														{% csrf_token %}
+														<button id="saveB" type="submit">
+																<a title="Remove from favorite">
+																	<i class='bx bx-x bg-danger text-white fw-bold rounded-circle p-3'></i>
+																</a>
+														</button>
+													</form>
+												{% else %}
+													<button>
+														<a href="{% url 'signIn' %}" title="Login First to mark it favorite job">
+															<i class='bx bx-heart'></i>
+														</a>
+													</button>
+												{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    {% else %}
+                        <div class="text-center">
+                            No jobs available at the moment! Please check back later.
+                        </div>
+                    {% endif %}
+
+                </div>
+                {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+
+					{% if page_obj.has_previous %}
+
+                        <li class="page-item">
+                            <a class="page-link"
+									href="?page={{page_obj.previous_page_number}}" tabindex="-{{page_obj.previous_page_number}}">
+                                <i class='bx bx-chevrons-left bx-fade-left'></i>
+                            </a>
+                        </li>
+						{% else %}
+						<li class="page-item disabled">
+                            <a class="page-link" href="#"  aria-disabled="true">
+                                <i class='bx bx-chevrons-left text-dark'></i>
+                            </a>
+                        </li>
+						{% endif %}
+
+						{% if page_obj.has_other_pages %}
+							{% for page in page_obj.paginator %}
+								<li class="page-item"><a class="page-link {% if page_obj.number == page.number %} active {% endif %}"
+										href="?page={{page.number}}"
+									>{{page.number}}</a></li>
+							{% endfor %}
+						{% endif %}
+
+
+						{% if page_obj.has_next %}
+							<li class="page-item">
+								<a class="page-link"
+									href="?page={{page_obj.next_page_number}}"
+								>
+									<i class='bx bx-chevrons-right bx-fade-right'></i>
+								</a>
+							</li>
+						{% else %}
+							<li class="page-item disabled">
+								<a class="page-link" href="#"
+								aria-disabled="true"
+								>
+									<i class='bx bx-chevrons-right text-dark'></i>
+								</a>
+							</li>
+						{% endif %}
+
+                    </ul>
+                </nav>
+				{% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Account Area End -->
+{% include "./components/footer.html" %}
+{% endblock %}

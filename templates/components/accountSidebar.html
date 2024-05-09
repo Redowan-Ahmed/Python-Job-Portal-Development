@@ -54,12 +54,6 @@
             {% endif %}
 
             <li>
-                <a href="#" class="">
-                    <i class='bx bx-user'></i>
-                    My Profile
-                </a>
-            </li>
-            <li>
                 <a href="resume.html">
                     <i class='bx bxs-file-doc'></i>
                     My Resume
@@ -78,21 +72,21 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="{% url 'loved-jobs' %}" class="{% if request.META.PATH_INFO == '/dashboard/saved-jobs/' %} active {% endif %}" >
                     <i class='bx bx-heart'></i>
                     Saved Jobs
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-lock-alt' ></i>
-                    Change Password
+                <a href="#" class="">
+                    <i class='bx bx-user'></i>
+                    My Profile settings
                 </a>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-coffee-togo'></i>
-                    Delete Account
+                <a href="{% url 'change-password' %}" class="{% if request.META.PATH_INFO == '/dashboard/change-password/' %} active {% endif %}">
+                    <i class='bx bx-lock-alt' ></i>
+                    Change Password
                 </a>
             </li>
             <li>
