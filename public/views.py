@@ -11,14 +11,15 @@ from datetime import date
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Avg, Max, Min, F, Count
 from candidates.models import FavoriteJob
-from django.views.decorators.cache import cache_page
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from PIL import Image
+from config.decorators import userBasedCache
+from django.core.cache import cache
 
 
 currentDate: date = date.today()
 
-@cache_page(60 * 15)
+@userBasedCache(600)
 def index(request):
     user = request.user
     categories = JobCategory.objects.prefetch_related('jobs').annotate(jobCount = Count('jobs')).filter(featured = True).order_by('-jobCount')[:8]
@@ -97,7 +98,7 @@ def CategorizedJobs(request, category):
         print("Error in categorized jobs", str(object=e))
         raise Http404('page is not found')
 
-@cache_page(60 * 15)
+@userBasedCache(60 * 15)
 def Jobs(request):
     if request.GET.get('keyword') and request.GET.get('location'):
         try:
@@ -248,6 +249,8 @@ def JobFavorite(request, pk):
             #print('created', created , ' ', 'loved', loved)
             if not created:
                 loved.delete()
+
+            cache.clear()
             response = {
                 "status": 201,
                 "message": "Job Favorited" if created else "Job Removed from Favorites",

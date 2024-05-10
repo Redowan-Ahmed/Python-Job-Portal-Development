@@ -14,9 +14,9 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from message.models import Message, RoomMessage
 from django.db.models import Avg, Max, Min, Count, Q
-from django.views.decorators.cache import cache_page
 from hr.forms import CompanyForm, CompanyFormEdit
 from message.models import MessageRoom
+from config.decorators import userBasedCache
 
 from pyhtml2pdf import converter
 
@@ -67,7 +67,7 @@ def SignOut(request):
 
 
 @login_required
-@cache_page(60 * 15)
+@userBasedCache(60 * 15)
 def Account(request):
     #print(request.user.hr_profile)
     if request.user.is_hr:
@@ -213,7 +213,7 @@ def EditJobPost(request, pk):
         print(e)
 
 @login_required
-@cache_page(60 * 15)
+@userBasedCache(60 * 15)
 def Companies(request):
     user = request.user
     companies = Company.objects.prefetch_related('jobs').filter(user = user).order_by('-created_at')
@@ -310,7 +310,7 @@ def savedJobs(request):
 
 
 @login_required
-@cache_page(60 * 15)
+@userBasedCache(60 * 15)
 def AccountChat(request, pk):
     user = request.user
     userChatRooms = user.chat_rooms.all().order_by('-updated_at')
@@ -348,7 +348,7 @@ def AccountChat(request, pk):
     # return render(request=request, template_name='account-Chat.html', context={"room_name": pk, 'user':user.pk})
 
 @login_required
-@cache_page(60 * 15)
+@userBasedCache(60 * 15)
 def AccountChats(request):
     user = request.user
     userChatRooms = user.chat_rooms.all().order_by('-updated_at')
